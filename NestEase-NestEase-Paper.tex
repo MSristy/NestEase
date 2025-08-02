@@ -1,0 +1,200 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{NestEase: A Unified Home Solutions Platform}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+NestEase is a unified home solutions platform designed to streamline property management, service provision, and user interactions. The system leverages a modern web stack, including a NestJS backend (MySQL, TypeORM, JWT, Stripe) and a Next.js frontend (Tailwind CSS, Radix UI), to deliver a robust, scalable, and user-friendly experience. This paper details the system architecture, design decisions, implementation, and key features such as role-based access, real-time notifications, and secure transactions.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The real estate and home services market is fragmented, with users often needing to juggle multiple platforms for property rental, purchase, service booking, and communication. \textbf{NestEase} aims to unify these experiences, providing a single platform for landlords, tenants, buyers, sellers, and service providers.
+
+\section{System Overview}
+\subsection{Objectives}
+\begin{itemize}
+    \item Provide a seamless platform for property rental, purchase, and service management.
+    \item Support multiple user roles with dynamic, real-time UI and backend logic.
+    \item Ensure secure authentication, authorization, and payment processing.
+    \item Enable real-time notifications and communication.
+\end{itemize}
+
+\subsection{Technology Stack}
+\begin{itemize}
+    \item \textbf{Backend:} NestJS, TypeORM, MySQL, JWT, Stripe
+    \item \textbf{Frontend:} Next.js, React, Tailwind CSS, Radix UI
+    \item \textbf{Other:} WebSockets (Socket.IO), REST API, Docker (optional)
+\end{itemize}
+
+\section{System Architecture}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{architecture_diagram.png}
+    \caption{NestEase System Architecture}
+\end{figure}
+
+\subsection{Backend}
+\begin{itemize}
+    \item \textbf{NestJS} REST API with modular structure (users, properties, bookings, notifications, etc.)
+    \item \textbf{TypeORM} for database abstraction and migrations.
+    \item \textbf{JWT-based authentication} for secure, stateless sessions.
+    \item \textbf{Role-based guards} for endpoint protection.
+    \item \textbf{Stripe integration} for payments.
+    \item \textbf{WebSocket gateway} for real-time notifications.
+\end{itemize}
+
+\subsection{Frontend}
+\begin{itemize}
+    \item \textbf{Next.js} for SSR and SPA capabilities.
+    \item \textbf{React Context} for global state (auth, notifications, cart).
+    \item \textbf{Tailwind CSS} and \textbf{Radix UI} for modern, accessible UI.
+    \item \textbf{Dynamic role-based rendering} and real-time updates.
+\end{itemize}
+
+\section{Key Features}
+\subsection{Role-Based Access Control}
+\begin{itemize}
+    \item Users can switch roles (landlord, tenant, buyer, seller, service provider).
+    \item Backend and frontend both enforce role-based permissions.
+    \item JWT is re-issued on role switch; frontend updates context and UI accordingly.
+\end{itemize}
+
+\subsection{Property Management}
+\begin{itemize}
+    \item CRUD operations for properties.
+    \item Filtering, searching, and categorization.
+    \item Bachelor-friendly and verified property badges.
+\end{itemize}
+
+\subsection{Booking and Transactions}
+\begin{itemize}
+    \item Tenants can book rentals; buyers can purchase properties.
+    \item Stripe integration for secure payments.
+    \item Approval/rejection workflows for landlords and sellers.
+\end{itemize}
+
+\subsection{Real-Time Notifications}
+\begin{itemize}
+    \item WebSocket-based notification system.
+    \item Unread count, mark-as-read, and notification history.
+\end{itemize}
+
+\subsection{Service Providers}
+\begin{itemize}
+    \item Service providers can list, manage, and fulfill service requests.
+    \item Users can book and review services.
+\end{itemize}
+
+\section{Implementation Details}
+\subsection{Backend: Role Guard Example}
+\begin{lstlisting}[language=TypeScript, caption=RolesGuard Implementation]
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    if (!roles) return true;
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+    const userRole = user?.role?.toLowerCase();
+    const requiredRoles = roles.map(role => role.toLowerCase());
+    // Role aliasing logic...
+    return requiredRoles.includes(userRole);
+  }
+}
+\end{lstlisting}
+
+\subsection{Frontend: Role Switch and JWT Refresh}
+\begin{lstlisting}[language=TypeScript, caption=Role Switcher Logic]
+if (data.token) {
+  localStorage.setItem('token', data.token);
+  window.location.reload(); // Ensures all requests use the new JWT
+}
+\end{lstlisting}
+
+\subsection{API Example: Property Fetch}
+\begin{lstlisting}[language=TypeScript, caption=Centralized API Fetch]
+export async function apiFetch(url: string, options: RequestInit = {}) {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+}
+\end{lstlisting}
+
+\section{Testing and Results}
+\begin{itemize}
+    \item Unit and integration tests for backend modules.
+    \item Manual and automated UI tests for role switching, booking, and notifications.
+    \item Real-time notification delivery confirmed via WebSocket.
+    \item Role-based access verified with debug endpoints.
+\end{itemize}
+
+\section{Challenges and Solutions}
+\begin{itemize}
+    \item \textbf{JWT propagation:} Ensured all requests use the latest token after role switch.
+    \item \textbf{Role aliasing:} Implemented flexible guard logic for role equivalence.
+    \item \textbf{Real-time updates:} Used WebSocket and React Context for instant UI feedback.
+\end{itemize}
+
+\section{Conclusion and Future Work}
+NestEase demonstrates a robust, scalable approach to unified home solutions. Future enhancements may include:
+\begin{itemize}
+    \item Mobile app integration.
+    \item AI-powered property recommendations.
+    \item Enhanced analytics and reporting.
+    \item Multi-language support.
+\end{itemize}
+
+\section*{References}
+\begin{itemize}
+    \item \url{https://nestjs.com/}
+    \item \url{https://nextjs.org/}
+    \item \url{https://stripe.com/}
+    \item \url{https://tailwindcss.com/}
+    \item \url{https://socket.io/}
+\end{itemize}
+
+\end{document} 

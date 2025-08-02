@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <div id="status" class="status">Checking authentication...</div>
+    <div id="user-info"></div>
+    <div id="token-info"></div>
+    
+    <button onclick="checkAuth()">Check Auth Again</button>
+    <button onclick="clearToken()">Clear Token</button>
+    <button onclick="window.location.href='/auth/login'">Go to Login</button>
+
+    <script>
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            const statusDiv = document.getElementById('status');
+            const userInfoDiv = document.getElementById('user-info');
+            const tokenInfoDiv = document.getElementById('token-info');
+            
+            tokenInfoDiv.innerHTML = `<strong>Token:</strong> ${token ? 'Present' : 'Missing'}`;
+            
+            if (!token) {
+                statusDiv.innerHTML = '<strong>No token found</strong> - You need to log in';
+                statusDiv.className = 'status error';
+                userInfoDiv.innerHTML = '';
+                return;
+            }
+
+            try {
+                statusDiv.innerHTML = 'Checking authentication...';
+                statusDiv.className = 'status warning';
+                
+                const response = await fetch('http://localhost:3001/users/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    statusDiv.innerHTML = '<strong>✅ Authenticated Successfully</strong>';
+                    statusDiv.className = 'status success';
+                    userInfoDiv.innerHTML = `
+                        <div class="status success">
+                            <h3>User Information:</h3>
+                            <p><strong>Name:</strong> ${userData.name}</p>
+                            <p><strong>Email:</strong> ${userData.email}</p>
+                            <p><strong>Role:</strong> ${userData.role}</p>
+                            <p><strong>ID:</strong> ${userData.id}</p>
+                        </div>
+                    `;
+                    
+                    if (userData.role !== 'admin') {
+                        statusDiv.innerHTML += '<br><strong>⚠️ Warning: User is not an admin!</strong>';
+                        statusDiv.className = 'status warning';
+                    }
+                } else {
+                    const errorData = await response.json();
+                    statusDiv.innerHTML = `<strong>❌ Authentication Failed</strong><br>Status: ${response.status}<br>Message: ${errorData.message}`;
+                    statusDiv.className = 'status error';
+                    userInfoDiv.innerHTML = '';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<strong>❌ Network Error</strong><br>Error: ${error.message}`;
+                statusDiv.className = 'status error';
+                userInfoDiv.innerHTML = '';
+            }
+        }
+
+        function clearToken() {
+            localStorage.removeItem('token');
+            document.getElementById('status').innerHTML = '<strong>Token cleared</strong>';
+            document.getElementById('status').className = 'status warning';
+            document.getElementById('user-info').innerHTML = '';
+            document.getElementById('token-info').innerHTML = '<strong>Token:</strong> Missing';
+        }
+
+        // Check auth on page load
+        checkAuth();
+    </script>
+</body>
+</html> 

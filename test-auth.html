@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <div id="status">Checking authentication...</div>
+    <div id="user-info"></div>
+    <div id="token-info"></div>
+
+    <script>
+        async function testAuth() {
+            const statusDiv = document.getElementById('status');
+            const userInfoDiv = document.getElementById('user-info');
+            const tokenInfoDiv = document.getElementById('token-info');
+
+            // Check if token exists
+            const token = localStorage.getItem('token');
+            tokenInfoDiv.innerHTML = `<p><strong>Token exists:</strong> ${!!token}</p>`;
+            
+            if (token) {
+                tokenInfoDiv.innerHTML += `<p><strong>Token length:</strong> ${token.length}</p>`;
+                tokenInfoDiv.innerHTML += `<p><strong>Token preview:</strong> ${token.substring(0, 50)}...</p>`;
+            }
+
+            if (!token) {
+                statusDiv.innerHTML = '<p style="color: red;">No token found in localStorage</p>';
+                return;
+            }
+
+            try {
+                statusDiv.innerHTML = '<p style="color: blue;">Testing authentication...</p>';
+                
+                const response = await fetch('http://localhost:3001/users/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                statusDiv.innerHTML = `<p><strong>Response status:</strong> ${response.status}</p>`;
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    userInfoDiv.innerHTML = `
+                        <h3>User Info:</h3>
+                        <p><strong>ID:</strong> ${userData.id}</p>
+                        <p><strong>Name:</strong> ${userData.name}</p>
+                        <p><strong>Email:</strong> ${userData.email}</p>
+                        <p><strong>Role:</strong> ${userData.role}</p>
+                    `;
+                    statusDiv.innerHTML = '<p style="color: green;">Authentication successful!</p>';
+                } else {
+                    const errorText = await response.text();
+                    userInfoDiv.innerHTML = `<p><strong>Error:</strong> ${errorText}</p>`;
+                    statusDiv.innerHTML = '<p style="color: red;">Authentication failed</p>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                userInfoDiv.innerHTML = `<p><strong>Error details:</strong> ${error}</p>`;
+            }
+        }
+
+        // Run test on page load
+        testAuth();
+    </script>
+</body>
+</html> 

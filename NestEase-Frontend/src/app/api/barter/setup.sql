@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS barter_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    transaction_type ENUM('sell', 'buy', 'swap', 'offer') NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    condition VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255),
+    owner_id INT NOT NULL,
+    owner_name VARCHAR(255) NOT NULL,
+    swap_value DECIMAL(10, 2),
+    discount INT,
+    original_price DECIMAL(10, 2),
+    status ENUM('active', 'sold', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+); 

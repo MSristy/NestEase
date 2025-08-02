@@ -1,0 +1,2 @@
+@echo off
+C:\xampp\mysql\bin\mysql -u root -e "USE nestease; SET FOREIGN_KEY_CHECKS = 0; DROP TABLE IF EXISTS barter_items, barter_images, barter_offers, barter_messages, barter_favorites, barter_views; SET FOREIGN_KEY_CHECKS = 1;" 

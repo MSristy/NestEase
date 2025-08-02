@@ -1,0 +1,68 @@
+<!-- Error message display -->
+<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+  {{ errorMessage }}
+</div>
+
+<form *ngIf="showAddForm" (ngSubmit)="onSubmit()" #swapForm="ngForm">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" name="title" [(ngModel)]="formData.title" required>
+  </div>
+
+  <div class="form-group">
+    <label for="category">Category</label>
+    <select class="form-control" id="category" name="category" [(ngModel)]="formData.category" required>
+      <option value="">Select Category</option>
+      <option value="Furniture">Furniture</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Books">Books</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="transactionType">Transaction Type</label>
+    <select class="form-control" id="transactionType" name="transactionType" [(ngModel)]="formData.transactionType" required>
+      <option value="">Select Type</option>
+      <option value="Sell">Sell</option>
+      <option value="Swap">Swap</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input type="number" class="form-control" id="price" name="price" [(ngModel)]="formData.price" required>
+  </div>
+
+  <div class="form-group">
+    <label for="condition">Condition</label>
+    <select class="form-control" id="condition" name="condition" [(ngModel)]="formData.condition" required>
+      <option value="">Select Condition</option>
+      <option value="New">New</option>
+      <option value="Like New">Like New</option>
+      <option value="Good">Good</option>
+      <option value="Fair">Fair</option>
+      <option value="Poor">Poor</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" [(ngModel)]="formData.description" required></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="location">Location</label>
+    <input type="text" class="form-control" id="location" name="location" [(ngModel)]="formData.location" required>
+  </div>
+
+  <div class="form-group">
+    <label for="image">Image</label>
+    <input type="file" class="form-control" id="image" name="image" (change)="onFileSelected($event)" accept="image/*">
+    <img *ngIf="imagePreview" [src]="imagePreview" class="mt-2" style="max-width: 200px;">
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!swapForm.form.valid">Add Swap Item</button>
+  <button type="button" class="btn btn-secondary ml-2" (click)="toggleAddForm()">Cancel</button>
+</form> 

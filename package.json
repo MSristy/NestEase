@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
+    "@nestjs/platform-socket.io": "^11.1.0",
+    "@nestjs/typeorm": "^11.0.0",
+    "@nestjs/websockets": "^11.1.0",
+    "@types/socket.io": "^3.0.1",
+    "framer-motion": "^12.9.4",
+    "lodash.debounce": "^4.0.8",
+    "mongodb": "^6.16.0",
+    "mysql2": "^3.14.1",
+    "next": "^15.3.3",
+    "react-hot-toast": "^2.5.2",
+    "socket.io": "^4.8.1",
+    "typeorm": "^0.3.24"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

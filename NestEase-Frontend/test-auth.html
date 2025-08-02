@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <div id="status">Checking...</div>
+    <div id="user-info"></div>
+    <div id="token-info"></div>
+
+    <script>
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            document.getElementById('token-info').innerHTML = `Token: ${token ? 'Present' : 'Missing'}`;
+            
+            if (!token) {
+                document.getElementById('status').innerHTML = 'No token found';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3001/users/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    document.getElementById('status').innerHTML = 'Authenticated';
+                    document.getElementById('user-info').innerHTML = `
+                        <p>User: ${userData.name}</p>
+                        <p>Email: ${userData.email}</p>
+                        <p>Role: ${userData.role}</p>
+                    `;
+                } else {
+                    document.getElementById('status').innerHTML = `Auth failed: ${response.status}`;
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html> 
