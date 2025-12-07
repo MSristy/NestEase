@@ -12,7 +12,7 @@ export class StripeService {
     const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY') || 'sk_test_4eC39HqLyjWDarjtT1zdp7dc';
     
     this.stripe = new Stripe(secretKey, {
-      apiVersion: '2025-04-30.basil',
+      apiVersion: '2025-08-27.basil',
     });
   }
 
