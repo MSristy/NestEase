@@ -10,12 +10,14 @@ import { NotificationService } from './notification.service';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { AuthService } from '../auth/auth.service';
 import { AuthModule } from '../auth/auth.module';
+import { ApplinkModule } from '../applink/applink.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Address, ConnectedAccount, Notification]),
     forwardRef(() => NotificationsModule),
     forwardRef(() => AuthModule),
+    ApplinkModule,
   ],
   providers: [UsersService, NotificationService, AuthService],
   controllers: [UsersController],

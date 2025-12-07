@@ -8,6 +8,7 @@ import { PropertyPurchase } from './entities/property-purchase.entity';
 import { PropertyBooking } from './property-booking.entity';
 import { User } from '../users/entities/user.entity';
 import { StripeModule } from '../payment/stripe.module';
+import { ApplinkModule } from '../applink/applink.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StripeModule } from '../payment/stripe.module';
       dest: './uploads/properties',
     }),
     StripeModule,
+    ApplinkModule,
   ],
   controllers: [PropertiesController],
   providers: [PropertiesService],

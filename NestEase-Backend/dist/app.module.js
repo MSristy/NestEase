@@ -43,6 +43,7 @@ const property_purchase_entity_1 = require("./properties/entities/property-purch
 const recommendations_module_1 = require("./recommendations/recommendations.module");
 const careers_module_1 = require("./careers/careers.module");
 const job_application_entity_1 = require("./careers/entities/job-application.entity");
+const applink_module_1 = require("./applink/applink.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -96,6 +97,7 @@ exports.AppModule = AppModule = __decorate([
             exchange_module_1.ExchangeModule,
             recommendations_module_1.RecommendationsModule,
             careers_module_1.CareersModule,
+            applink_module_1.ApplinkModule,
         ],
     })
 ], AppModule);

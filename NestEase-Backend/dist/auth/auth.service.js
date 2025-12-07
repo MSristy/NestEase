@@ -44,6 +44,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -53,10 +54,16 @@ const typeorm_2 = require("typeorm");
 const user_entity_1 = require("../users/entities/user.entity");
 const role_enum_1 = require("../users/role.enum");
 const bcrypt = __importStar(require("bcrypt"));
-let AuthService = class AuthService {
-    constructor(usersRepository, jwtService) {
+const applink_service_1 = require("../applink/applink.service");
+const notification_service_1 = require("../users/notification.service");
+const notification_entity_1 = require("../users/entities/notification.entity");
+let AuthService = AuthService_1 = class AuthService {
+    constructor(usersRepository, jwtService, applinkService, notificationService) {
         this.usersRepository = usersRepository;
         this.jwtService = jwtService;
+        this.applinkService = applinkService;
+        this.notificationService = notificationService;
+        this.logger = new common_1.Logger(AuthService_1.name);
     }
     async signup(signupDto) {
         const { email, password, name, role } = signupDto;
@@ -75,8 +82,29 @@ let AuthService = class AuthService {
             role: role || role_enum_1.Role.USER, // Use provided role or default to USER from enum
         });
         await this.usersRepository.save(user);
+        // Send welcome SMS if phone number is provided and SMS is enabled
+        if (user.phone && user.smsNotifications && this.applinkService.isConfigured()) {
+            try {
+                const welcomeMessage = `Welcome to NestEase, ${user.name}! Your account has been created successfully. Start exploring properties, services, and swaps now!`;
+                await this.applinkService.sendSMS(user.phone, welcomeMessage);
+                this.logger.log(`Welcome SMS sent to ${user.email}`);
+            }
+            catch (error) {
+                const errorMessage = (error === null || error === void 0 ? void 0 : error.message) || 'Unknown error';
+                this.logger.error(`Failed to send welcome SMS: ${errorMessage}`);
+                // Don't fail registration if SMS fails
+            }
+        }
         // Generate JWT token
         const payload = { email: user.email, sub: user.id, role: user.role };
+        // Create an in-app welcome notification
+        try {
+            await this.notificationService.createNotification(user.id, notification_entity_1.NotificationType.SYSTEM, 'Welcome to NestEase', `Hi ${user.name}, welcome to NestEase!`);
+        }
+        catch (err) {
+            this.logger.warn('Failed to create welcome notification: ' + ((err === null || err === void 0 ? void 0 : err.message) || err));
+            // Don't fail signup if notification fails
+        }
         return {
             access_token: this.jwtService.sign(payload),
             user: {
@@ -160,10 +188,12 @@ let AuthService = class AuthService {
     }
 };
 exports.AuthService = AuthService;
-exports.AuthService = AuthService = __decorate([
+exports.AuthService = AuthService = AuthService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        applink_service_1.ApplinkService,
+        notification_service_1.NotificationService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

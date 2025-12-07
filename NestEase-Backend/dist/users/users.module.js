@@ -19,6 +19,7 @@ const notification_service_1 = require("./notification.service");
 const notifications_module_1 = require("../notifications/notifications.module");
 const auth_service_1 = require("../auth/auth.service");
 const auth_module_1 = require("../auth/auth.module");
+const applink_module_1 = require("../applink/applink.module");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
@@ -28,6 +29,7 @@ exports.UsersModule = UsersModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, address_entity_1.Address, connected_account_entity_1.ConnectedAccount, notification_entity_1.Notification]),
             (0, common_1.forwardRef)(() => notifications_module_1.NotificationsModule),
             (0, common_1.forwardRef)(() => auth_module_1.AuthModule),
+            applink_module_1.ApplinkModule,
         ],
         providers: [users_service_1.UsersService, notification_service_1.NotificationService, auth_service_1.AuthService],
         controllers: [users_controller_1.UsersController],

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var NotificationService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationService = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,13 +20,16 @@ const typeorm_2 = require("typeorm");
 const notification_entity_1 = require("./entities/notification.entity");
 const user_entity_1 = require("./entities/user.entity");
 const notifications_gateway_1 = require("../notifications/notifications.gateway");
-let NotificationService = class NotificationService {
-    constructor(notificationRepository, userRepository, notificationsGateway) {
+const applink_service_1 = require("../applink/applink.service");
+let NotificationService = NotificationService_1 = class NotificationService {
+    constructor(notificationRepository, userRepository, notificationsGateway, applinkService) {
         this.notificationRepository = notificationRepository;
         this.userRepository = userRepository;
         this.notificationsGateway = notificationsGateway;
+        this.applinkService = applinkService;
+        this.logger = new common_1.Logger(NotificationService_1.name);
     }
-    async createNotification(userId, type, title, message, metadata) {
+    async createNotification(userId, type, title, message, metadata, sendSMS = false) {
         const notification = this.notificationRepository.create({
             userId,
             type,
@@ -44,7 +48,36 @@ let NotificationService = class NotificationService {
             createdAt: savedNotification.createdAt,
             metadata: savedNotification.metadata,
         });
+        // Send SMS notification if requested and user has SMS enabled
+        if (sendSMS) {
+            await this.sendSMSNotification(userId, message);
+        }
         return savedNotification;
+    }
+    /**
+     * Send SMS notification to user
+     * @param userId - User ID
+     * @param message - SMS message
+     */
+    async sendSMSNotification(userId, message) {
+        try {
+            const user = await this.userRepository.findOne({ where: { id: userId } });
+            if (!user || !user.phone || !user.smsNotifications) {
+                return; // Skip if user doesn't have phone or SMS disabled
+            }
+            if (!this.applinkService.isConfigured()) {
+                this.logger.warn('Applink SMS service is not configured. Skipping SMS notification.');
+                return;
+            }
+            // Send SMS via Applink
+            await this.applinkService.sendSMS(user.phone, message);
+            this.logger.log(`SMS notification sent to user ${userId} at ${user.phone}`);
+        }
+        catch (error) {
+            const errorMessage = (error === null || error === void 0 ? void 0 : error.message) || 'Unknown error';
+            this.logger.error(`Failed to send SMS notification to user ${userId}: ${errorMessage}`);
+            // Don't throw error - SMS failure shouldn't break the notification flow
+        }
     }
     async getUserNotifications(userId) {
         return await this.notificationRepository.find({
@@ -77,12 +110,13 @@ let NotificationService = class NotificationService {
     }
 };
 exports.NotificationService = NotificationService;
-exports.NotificationService = NotificationService = __decorate([
+exports.NotificationService = NotificationService = NotificationService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(notification_entity_1.Notification)),
     __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
-        notifications_gateway_1.NotificationsGateway])
+        notifications_gateway_1.NotificationsGateway,
+        applink_service_1.ApplinkService])
 ], NotificationService);
 //# sourceMappingURL=notification.service.js.map

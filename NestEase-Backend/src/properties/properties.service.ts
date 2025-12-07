@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PropertyType, PropertyStatus, Property } from './property.entity';
@@ -6,9 +6,12 @@ import { User } from '../users/entities/user.entity';
 import { PropertyBooking } from './property-booking.entity';
 import { PropertyPurchase } from './entities/property-purchase.entity';
 import { StripeService } from '../payment/stripe.service';
+import { ApplinkService } from '../applink/applink.service';
 
 @Injectable()
 export class PropertiesService {
+  private readonly logger = new Logger(PropertiesService.name);
+
   constructor(
     @InjectRepository(Property)
     private propertiesRepository: Repository<Property>,
@@ -19,6 +22,7 @@ export class PropertiesService {
     @InjectRepository(PropertyPurchase)
     private propertyPurchaseRepository: Repository<PropertyPurchase>,
     private stripeService: StripeService,
+    private applinkService: ApplinkService,
   ) {}
 
   async create(createPropertyDto: Partial<Property>, ownerId: number): Promise<Property> {
@@ -111,7 +115,44 @@ export class PropertiesService {
       status: 'PENDING',
       paymentStatus: 'PENDING',
     });
-    return await this.propertyBookingRepository.save(booking);
+    const savedBooking = await this.propertyBookingRepository.save(booking);
+
+    // Send SMS notifications
+    await this.sendPropertyBookingSMS(property, tenant, savedBooking);
+
+    return savedBooking;
+  }
+
+  /**
+   * Send SMS notifications for property bookings
+   */
+  private async sendPropertyBookingSMS(
+    property: Property,
+    tenant: User,
+    booking: PropertyBooking
+  ): Promise<void> {
+    if (!this.applinkService.isConfigured()) {
+      return;
+    }
+
+    try {
+      // Notify tenant
+      if (tenant.phone && tenant.smsNotifications) {
+        const tenantMessage = `Your property booking request for ${property.title} (${property.address}) has been submitted. Booking ID: ${booking.id}. Waiting for landlord approval.`;
+        await this.applinkService.sendSMS(tenant.phone, tenantMessage);
+      }
+
+      // Notify property owner
+      const owner = property.owner;
+      if (owner && owner.phone && owner.smsNotifications) {
+        const ownerMessage = `New booking request from ${tenant.name} for your property "${property.title}" at ${property.address}. Booking ID: ${booking.id}. Please review in your dashboard.`;
+        await this.applinkService.sendSMS(owner.phone, ownerMessage);
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Unknown error';
+      this.logger.error(`Failed to send property booking SMS: ${errorMessage}`);
+      // Don't throw - SMS failure shouldn't break booking flow
+    }
   }
 
   // Get tenant's bookings

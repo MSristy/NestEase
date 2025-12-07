@@ -1,12 +1,15 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Booking, BookingStatus } from './entities/booking.entity';
 import { ServiceProvider } from '../service-providers/entities/service-provider.entity';
 import { User } from '../users/entities/user.entity';
+import { ApplinkService } from '../applink/applink.service';
 
 @Injectable()
 export class BookingsService {
+  private readonly logger = new Logger(BookingsService.name);
+
   constructor(
     @InjectRepository(Booking)
     private bookingRepository: Repository<Booking>,
@@ -14,10 +17,14 @@ export class BookingsService {
     private serviceProviderRepository: Repository<ServiceProvider>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private applinkService: ApplinkService,
   ) {}
 
   async createBooking(serviceId: number, bookingData: any, customerId: number) {
-    const serviceProvider = await this.serviceProviderRepository.findOne({ where: { id: serviceId } });
+    const serviceProvider = await this.serviceProviderRepository.findOne({ 
+      where: { id: serviceId },
+      relations: ['owner']
+    });
     if (!serviceProvider) {
       throw new NotFoundException('Service provider not found');
     }
@@ -52,6 +59,9 @@ export class BookingsService {
     });
 
     const savedBooking = await this.bookingRepository.save(booking);
+
+    // Send SMS notifications
+    await this.sendBookingSMSNotifications(savedBooking, serviceProvider, customer, 'created');
 
     // Generate bill
     const bill = {
@@ -146,7 +156,8 @@ export class BookingsService {
 
   async approveBooking(bookingId: number, serviceProviderId: number) {
     const booking = await this.bookingRepository.findOne({
-      where: { id: bookingId, serviceProviderId }
+      where: { id: bookingId, serviceProviderId },
+      relations: ['serviceProvider', 'serviceProvider.owner']
     });
 
     if (!booking) {
@@ -159,6 +170,16 @@ export class BookingsService {
 
     booking.status = BookingStatus.APPROVED;
     await this.bookingRepository.save(booking);
+
+    // Send SMS notifications for approval
+    const customer = await this.userRepository.findOne({ where: { id: booking.customerId } });
+    const serviceProvider = await this.serviceProviderRepository.findOne({ 
+      where: { id: booking.serviceProviderId },
+      relations: ['owner']
+    });
+    if (customer && serviceProvider) {
+      await this.sendBookingSMSNotifications(booking, serviceProvider, customer, 'approved');
+    }
 
     return {
       success: true,
@@ -173,7 +194,8 @@ export class BookingsService {
 
   async rejectBooking(bookingId: number, serviceProviderId: number, reason: string) {
     const booking = await this.bookingRepository.findOne({
-      where: { id: bookingId, serviceProviderId }
+      where: { id: bookingId, serviceProviderId },
+      relations: ['serviceProvider', 'serviceProvider.owner']
     });
 
     if (!booking) {
@@ -187,6 +209,16 @@ export class BookingsService {
     booking.status = BookingStatus.REJECTED;
     booking.rejectionReason = reason;
     await this.bookingRepository.save(booking);
+
+    // Send SMS notifications for rejection
+    const customer = await this.userRepository.findOne({ where: { id: booking.customerId } });
+    const serviceProvider = await this.serviceProviderRepository.findOne({ 
+      where: { id: booking.serviceProviderId },
+      relations: ['owner']
+    });
+    if (customer && serviceProvider) {
+      await this.sendBookingSMSNotifications(booking, serviceProvider, customer, 'rejected', reason);
+    }
 
     return {
       success: true,
@@ -239,5 +271,56 @@ export class BookingsService {
     const basePrice = priceMap[key] || 600;
     console.log(`[getBasePrice] ServiceType: '${serviceType}' | Key: '${key}' | Price: ${basePrice}`);
     return basePrice;
+  }
+
+  /**
+   * Send SMS notifications for booking events
+   */
+  private async sendBookingSMSNotifications(
+    booking: Booking,
+    serviceProvider: ServiceProvider,
+    customer: User,
+    event: 'created' | 'approved' | 'rejected',
+    rejectionReason?: string
+  ): Promise<void> {
+    if (!this.applinkService.isConfigured()) {
+      return;
+    }
+
+    try {
+      if (event === 'created') {
+        // Notify customer
+        if (customer.phone && customer.smsNotifications) {
+          const customerMessage = `Your ${serviceProvider.serviceType} service booking request has been submitted. Booking ID: ${booking.id}. Waiting for provider approval.`;
+          await this.applinkService.sendSMS(customer.phone, customerMessage);
+        }
+
+        // Notify service provider
+        if (serviceProvider.owner) {
+          const provider = await this.userRepository.findOne({ where: { id: serviceProvider.owner.id } });
+          if (provider && provider.phone && provider.smsNotifications) {
+            const providerMessage = `New booking request from ${customer.name} for ${serviceProvider.serviceType} on ${booking.serviceDate} at ${booking.serviceTime}. Booking ID: ${booking.id}.`;
+            await this.applinkService.sendSMS(provider.phone, providerMessage);
+          }
+        }
+      } else if (event === 'approved') {
+        // Notify customer
+        if (customer.phone && customer.smsNotifications) {
+          const customerMessage = `Great news! Your ${serviceProvider.serviceType} service booking (ID: ${booking.id}) has been approved. Service scheduled for ${booking.serviceDate} at ${booking.serviceTime}.`;
+          await this.applinkService.sendSMS(customer.phone, customerMessage);
+        }
+      } else if (event === 'rejected') {
+        // Notify customer
+        if (customer.phone && customer.smsNotifications) {
+          const reasonText = rejectionReason ? ` Reason: ${rejectionReason}.` : '';
+          const customerMessage = `Your ${serviceProvider.serviceType} service booking (ID: ${booking.id}) has been declined.${reasonText} Please try booking another time slot.`;
+          await this.applinkService.sendSMS(customer.phone, customerMessage);
+        }
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Unknown error';
+      this.logger.error(`Failed to send booking SMS notifications: ${errorMessage}`);
+      // Don't throw - SMS failure shouldn't break booking flow
+    }
   }
 } 

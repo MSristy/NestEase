@@ -34,6 +34,7 @@ import { PropertyPurchase } from './properties/entities/property-purchase.entity
 import { RecommendationsModule } from './recommendations/recommendations.module';
 import { CareersModule } from './careers/careers.module';
 import { JobApplication } from './careers/entities/job-application.entity';
+import { ApplinkModule } from './applink/applink.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { JobApplication } from './careers/entities/job-application.entity';
     ExchangeModule,
     RecommendationsModule,
     CareersModule,
+    ApplinkModule,
   ],
 })
 export class AppModule {}

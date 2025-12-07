@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var PropertiesService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PropertiesService = void 0;
 const common_1 = require("@nestjs/common");
@@ -21,13 +22,16 @@ const user_entity_1 = require("../users/entities/user.entity");
 const property_booking_entity_1 = require("./property-booking.entity");
 const property_purchase_entity_1 = require("./entities/property-purchase.entity");
 const stripe_service_1 = require("../payment/stripe.service");
-let PropertiesService = class PropertiesService {
-    constructor(propertiesRepository, usersRepository, propertyBookingRepository, propertyPurchaseRepository, stripeService) {
+const applink_service_1 = require("../applink/applink.service");
+let PropertiesService = PropertiesService_1 = class PropertiesService {
+    constructor(propertiesRepository, usersRepository, propertyBookingRepository, propertyPurchaseRepository, stripeService, applinkService) {
         this.propertiesRepository = propertiesRepository;
         this.usersRepository = usersRepository;
         this.propertyBookingRepository = propertyBookingRepository;
         this.propertyPurchaseRepository = propertyPurchaseRepository;
         this.stripeService = stripeService;
+        this.applinkService = applinkService;
+        this.logger = new common_1.Logger(PropertiesService_1.name);
     }
     async create(createPropertyDto, ownerId) {
         const owner = await this.usersRepository.findOne({ where: { id: ownerId } });
@@ -109,7 +113,36 @@ let PropertiesService = class PropertiesService {
             status: 'PENDING',
             paymentStatus: 'PENDING',
         });
-        return await this.propertyBookingRepository.save(booking);
+        const savedBooking = await this.propertyBookingRepository.save(booking);
+        // Send SMS notifications
+        await this.sendPropertyBookingSMS(property, tenant, savedBooking);
+        return savedBooking;
+    }
+    /**
+     * Send SMS notifications for property bookings
+     */
+    async sendPropertyBookingSMS(property, tenant, booking) {
+        if (!this.applinkService.isConfigured()) {
+            return;
+        }
+        try {
+            // Notify tenant
+            if (tenant.phone && tenant.smsNotifications) {
+                const tenantMessage = `Your property booking request for ${property.title} (${property.address}) has been submitted. Booking ID: ${booking.id}. Waiting for landlord approval.`;
+                await this.applinkService.sendSMS(tenant.phone, tenantMessage);
+            }
+            // Notify property owner
+            const owner = property.owner;
+            if (owner && owner.phone && owner.smsNotifications) {
+                const ownerMessage = `New booking request from ${tenant.name} for your property "${property.title}" at ${property.address}. Booking ID: ${booking.id}. Please review in your dashboard.`;
+                await this.applinkService.sendSMS(owner.phone, ownerMessage);
+            }
+        }
+        catch (error) {
+            const errorMessage = (error === null || error === void 0 ? void 0 : error.message) || 'Unknown error';
+            this.logger.error(`Failed to send property booking SMS: ${errorMessage}`);
+            // Don't throw - SMS failure shouldn't break booking flow
+        }
     }
     // Get tenant's bookings
     async getMyBookings(userId) {
@@ -341,7 +374,7 @@ let PropertiesService = class PropertiesService {
     }
 };
 exports.PropertiesService = PropertiesService;
-exports.PropertiesService = PropertiesService = __decorate([
+exports.PropertiesService = PropertiesService = PropertiesService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(property_entity_1.Property)),
     __param(1, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
@@ -351,6 +384,7 @@ exports.PropertiesService = PropertiesService = __decorate([
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
-        stripe_service_1.StripeService])
+        stripe_service_1.StripeService,
+        applink_service_1.ApplinkService])
 ], PropertiesService);
 //# sourceMappingURL=properties.service.js.map

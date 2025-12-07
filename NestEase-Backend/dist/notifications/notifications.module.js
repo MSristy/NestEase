@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const notifications_gateway_1 = require("./notifications.gateway");
 const notifications_controller_1 = require("./notifications.controller");
 const users_module_1 = require("../users/users.module");
+const auth_module_1 = require("../auth/auth.module");
 let NotificationsModule = class NotificationsModule {
 };
 exports.NotificationsModule = NotificationsModule;
 exports.NotificationsModule = NotificationsModule = __decorate([
     (0, common_1.Module)({
-        imports: [(0, common_1.forwardRef)(() => users_module_1.UsersModule)],
+        imports: [(0, common_1.forwardRef)(() => users_module_1.UsersModule), (0, common_1.forwardRef)(() => auth_module_1.AuthModule)],
         providers: [notifications_gateway_1.NotificationsGateway],
         controllers: [notifications_controller_1.NotificationsController],
         exports: [notifications_gateway_1.NotificationsGateway],

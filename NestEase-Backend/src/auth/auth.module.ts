@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
@@ -8,6 +8,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { NotificationsGateway } from '../notifications/notifications.gateway';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { UsersModule } from '../users/users.module';
+import { ApplinkModule } from '../applink/applink.module';
 
 @Module({
   imports: [
@@ -17,9 +19,11 @@ import { NotificationsModule } from '../notifications/notifications.module';
       signOptions: { expiresIn: '1d' },
     }),
     NotificationsModule,
+    forwardRef(() => UsersModule),
+    ApplinkModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RolesGuard, NotificationsGateway],
-  exports: [AuthService, JwtStrategy, RolesGuard, NotificationsGateway, JwtModule],
+  providers: [AuthService, JwtStrategy, RolesGuard],
+  exports: [AuthService, JwtStrategy, RolesGuard, JwtModule],
 })
 export class AuthModule {}

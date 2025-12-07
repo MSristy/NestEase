@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var BookingsService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingsService = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,14 +20,20 @@ const typeorm_2 = require("typeorm");
 const booking_entity_1 = require("./entities/booking.entity");
 const service_provider_entity_1 = require("../service-providers/entities/service-provider.entity");
 const user_entity_1 = require("../users/entities/user.entity");
-let BookingsService = class BookingsService {
-    constructor(bookingRepository, serviceProviderRepository, userRepository) {
+const applink_service_1 = require("../applink/applink.service");
+let BookingsService = BookingsService_1 = class BookingsService {
+    constructor(bookingRepository, serviceProviderRepository, userRepository, applinkService) {
         this.bookingRepository = bookingRepository;
         this.serviceProviderRepository = serviceProviderRepository;
         this.userRepository = userRepository;
+        this.applinkService = applinkService;
+        this.logger = new common_1.Logger(BookingsService_1.name);
     }
     async createBooking(serviceId, bookingData, customerId) {
-        const serviceProvider = await this.serviceProviderRepository.findOne({ where: { id: serviceId } });
+        const serviceProvider = await this.serviceProviderRepository.findOne({
+            where: { id: serviceId },
+            relations: ['owner']
+        });
         if (!serviceProvider) {
             throw new common_1.NotFoundException('Service provider not found');
         }
@@ -56,6 +63,8 @@ let BookingsService = class BookingsService {
             totalAmount: totalAmount,
         });
         const savedBooking = await this.bookingRepository.save(booking);
+        // Send SMS notifications
+        await this.sendBookingSMSNotifications(savedBooking, serviceProvider, customer, 'created');
         // Generate bill
         const bill = {
             billId: `BILL-${savedBooking.id}-${Date.now()}`,
@@ -143,7 +152,8 @@ let BookingsService = class BookingsService {
     }
     async approveBooking(bookingId, serviceProviderId) {
         const booking = await this.bookingRepository.findOne({
-            where: { id: bookingId, serviceProviderId }
+            where: { id: bookingId, serviceProviderId },
+            relations: ['serviceProvider', 'serviceProvider.owner']
         });
         if (!booking) {
             throw new common_1.NotFoundException('Booking not found');
@@ -153,6 +163,15 @@ let BookingsService = class BookingsService {
         }
         booking.status = booking_entity_1.BookingStatus.APPROVED;
         await this.bookingRepository.save(booking);
+        // Send SMS notifications for approval
+        const customer = await this.userRepository.findOne({ where: { id: booking.customerId } });
+        const serviceProvider = await this.serviceProviderRepository.findOne({
+            where: { id: booking.serviceProviderId },
+            relations: ['owner']
+        });
+        if (customer && serviceProvider) {
+            await this.sendBookingSMSNotifications(booking, serviceProvider, customer, 'approved');
+        }
         return {
             success: true,
             message: 'Booking approved successfully',
@@ -165,7 +184,8 @@ let BookingsService = class BookingsService {
     }
     async rejectBooking(bookingId, serviceProviderId, reason) {
         const booking = await this.bookingRepository.findOne({
-            where: { id: bookingId, serviceProviderId }
+            where: { id: bookingId, serviceProviderId },
+            relations: ['serviceProvider', 'serviceProvider.owner']
         });
         if (!booking) {
             throw new common_1.NotFoundException('Booking not found');
@@ -176,6 +196,15 @@ let BookingsService = class BookingsService {
         booking.status = booking_entity_1.BookingStatus.REJECTED;
         booking.rejectionReason = reason;
         await this.bookingRepository.save(booking);
+        // Send SMS notifications for rejection
+        const customer = await this.userRepository.findOne({ where: { id: booking.customerId } });
+        const serviceProvider = await this.serviceProviderRepository.findOne({
+            where: { id: booking.serviceProviderId },
+            relations: ['owner']
+        });
+        if (customer && serviceProvider) {
+            await this.sendBookingSMSNotifications(booking, serviceProvider, customer, 'rejected', reason);
+        }
         return {
             success: true,
             message: 'Booking rejected successfully',
@@ -223,15 +252,61 @@ let BookingsService = class BookingsService {
         console.log(`[getBasePrice] ServiceType: '${serviceType}' | Key: '${key}' | Price: ${basePrice}`);
         return basePrice;
     }
+    /**
+     * Send SMS notifications for booking events
+     */
+    async sendBookingSMSNotifications(booking, serviceProvider, customer, event, rejectionReason) {
+        if (!this.applinkService.isConfigured()) {
+            return;
+        }
+        try {
+            if (event === 'created') {
+                // Notify customer
+                if (customer.phone && customer.smsNotifications) {
+                    const customerMessage = `Your ${serviceProvider.serviceType} service booking request has been submitted. Booking ID: ${booking.id}. Waiting for provider approval.`;
+                    await this.applinkService.sendSMS(customer.phone, customerMessage);
+                }
+                // Notify service provider
+                if (serviceProvider.owner) {
+                    const provider = await this.userRepository.findOne({ where: { id: serviceProvider.owner.id } });
+                    if (provider && provider.phone && provider.smsNotifications) {
+                        const providerMessage = `New booking request from ${customer.name} for ${serviceProvider.serviceType} on ${booking.serviceDate} at ${booking.serviceTime}. Booking ID: ${booking.id}.`;
+                        await this.applinkService.sendSMS(provider.phone, providerMessage);
+                    }
+                }
+            }
+            else if (event === 'approved') {
+                // Notify customer
+                if (customer.phone && customer.smsNotifications) {
+                    const customerMessage = `Great news! Your ${serviceProvider.serviceType} service booking (ID: ${booking.id}) has been approved. Service scheduled for ${booking.serviceDate} at ${booking.serviceTime}.`;
+                    await this.applinkService.sendSMS(customer.phone, customerMessage);
+                }
+            }
+            else if (event === 'rejected') {
+                // Notify customer
+                if (customer.phone && customer.smsNotifications) {
+                    const reasonText = rejectionReason ? ` Reason: ${rejectionReason}.` : '';
+                    const customerMessage = `Your ${serviceProvider.serviceType} service booking (ID: ${booking.id}) has been declined.${reasonText} Please try booking another time slot.`;
+                    await this.applinkService.sendSMS(customer.phone, customerMessage);
+                }
+            }
+        }
+        catch (error) {
+            const errorMessage = (error === null || error === void 0 ? void 0 : error.message) || 'Unknown error';
+            this.logger.error(`Failed to send booking SMS notifications: ${errorMessage}`);
+            // Don't throw - SMS failure shouldn't break booking flow
+        }
+    }
 };
 exports.BookingsService = BookingsService;
-exports.BookingsService = BookingsService = __decorate([
+exports.BookingsService = BookingsService = BookingsService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(booking_entity_1.Booking)),
     __param(1, (0, typeorm_1.InjectRepository)(service_provider_entity_1.ServiceProvider)),
     __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        applink_service_1.ApplinkService])
 ], BookingsService);
 //# sourceMappingURL=bookings.service.js.map

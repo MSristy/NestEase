@@ -12,19 +12,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
+const jwt_1 = require("@nestjs/jwt");
 let NotificationsGateway = class NotificationsGateway {
-    handleConnection(client) {
-        const userId = client.handshake.query.userId;
-        if (userId) {
-            client.join(userId);
-            console.log(`User ${userId} connected to notifications`);
+    constructor(jwtService) {
+        this.jwtService = jwtService;
+    }
+    async handleConnection(client) {
+        var _a;
+        // Prefer token based auth for socket handshake
+        const token = (client.handshake.auth && client.handshake.auth.token) || ((_a = client.handshake.query) === null || _a === void 0 ? void 0 : _a.token);
+        if (!token) {
+            client.disconnect();
+            console.log('Socket connection rejected: missing token');
+            return;
+        }
+        try {
+            const payload = this.jwtService.verify(token);
+            const userId = (payload === null || payload === void 0 ? void 0 : payload.sub) || (payload === null || payload === void 0 ? void 0 : payload.id) || (payload === null || payload === void 0 ? void 0 : payload.userId);
+            if (!userId) {
+                client.disconnect();
+                return;
+            }
+            client.data.userId = userId.toString();
+            client.join(userId.toString());
+            console.log(`User ${userId} connected to notifications via token`);
+        }
+        catch (err) {
+            client.disconnect();
+            console.log('Socket connection rejected: invalid token');
         }
     }
     handleDisconnect(client) {
-        // Optionally handle disconnect logic
+        var _a;
+        const userId = (_a = client.data) === null || _a === void 0 ? void 0 : _a.userId;
+        if (userId) {
+            console.log(`User ${userId} disconnected from notifications`);
+        }
+        else {
+            console.log(`Client disconnected from notifications: ${client.id}`);
+        }
     }
     sendNotification(userId, notification) {
         this.server.to(userId).emit('notification', notification);
+        console.log(`Emitting notification to user ${userId}`, notification);
     }
 };
 exports.NotificationsGateway = NotificationsGateway;
@@ -33,6 +63,7 @@ __decorate([
     __metadata("design:type", socket_io_1.Server)
 ], NotificationsGateway.prototype, "server", void 0);
 exports.NotificationsGateway = NotificationsGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ cors: true })
+    (0, websockets_1.WebSocketGateway)({ cors: true }),
+    __metadata("design:paramtypes", [jwt_1.JwtService])
 ], NotificationsGateway);
 //# sourceMappingURL=notifications.gateway.js.map

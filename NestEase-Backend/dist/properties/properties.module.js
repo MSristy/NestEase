@@ -17,6 +17,7 @@ const property_purchase_entity_1 = require("./entities/property-purchase.entity"
 const property_booking_entity_1 = require("./property-booking.entity");
 const user_entity_1 = require("../users/entities/user.entity");
 const stripe_module_1 = require("../payment/stripe.module");
+const applink_module_1 = require("../applink/applink.module");
 let PropertiesModule = class PropertiesModule {
 };
 exports.PropertiesModule = PropertiesModule;
@@ -28,6 +29,7 @@ exports.PropertiesModule = PropertiesModule = __decorate([
                 dest: './uploads/properties',
             }),
             stripe_module_1.StripeModule,
+            applink_module_1.ApplinkModule,
         ],
         controllers: [properties_controller_1.PropertiesController],
         providers: [properties_service_1.PropertiesService],

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsController = void 0;
 const common_1 = require("@nestjs/common");
 const notification_service_1 = require("../users/notification.service");
+const notification_entity_1 = require("../users/entities/notification.entity");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 let NotificationsController = class NotificationsController {
     constructor(notificationService) {
@@ -22,6 +23,14 @@ let NotificationsController = class NotificationsController {
     }
     async getMyNotifications(req) {
         return await this.notificationService.getUserNotifications(req.user.id);
+    }
+    // Temporary endpoint to emit a sample notification to the current user for testing real-time flow
+    async testNotification(req) {
+        const userId = req.user.id;
+        const title = 'Test Notification';
+        const message = 'This is a test notification sent to you.';
+        const notification = await this.notificationService.createNotification(userId, notification_entity_1.NotificationType.SYSTEM, title, message, {}, false);
+        return { success: true, notification };
     }
 };
 exports.NotificationsController = NotificationsController;
@@ -33,6 +42,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], NotificationsController.prototype, "getMyNotifications", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('test'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], NotificationsController.prototype, "testNotification", null);
 exports.NotificationsController = NotificationsController = __decorate([
     (0, common_1.Controller)('notifications'),
     __metadata("design:paramtypes", [notification_service_1.NotificationService])

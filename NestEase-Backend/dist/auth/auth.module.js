@@ -15,8 +15,9 @@ const auth_controller_1 = require("./auth.controller");
 const user_entity_1 = require("../users/entities/user.entity");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
 const roles_guard_1 = require("./guards/roles.guard");
-const notifications_gateway_1 = require("../notifications/notifications.gateway");
 const notifications_module_1 = require("../notifications/notifications.module");
+const users_module_1 = require("../users/users.module");
+const applink_module_1 = require("../applink/applink.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -29,10 +30,12 @@ exports.AuthModule = AuthModule = __decorate([
                 signOptions: { expiresIn: '1d' },
             }),
             notifications_module_1.NotificationsModule,
+            (0, common_1.forwardRef)(() => users_module_1.UsersModule),
+            applink_module_1.ApplinkModule,
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, roles_guard_1.RolesGuard, notifications_gateway_1.NotificationsGateway],
-        exports: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, roles_guard_1.RolesGuard, notifications_gateway_1.NotificationsGateway, jwt_1.JwtModule],
+        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, roles_guard_1.RolesGuard],
+        exports: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, roles_guard_1.RolesGuard, jwt_1.JwtModule],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

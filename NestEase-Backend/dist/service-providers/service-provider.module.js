@@ -15,7 +15,6 @@ const service_provider_service_1 = require("./service-provider.service");
 const user_entity_1 = require("../users/entities/user.entity");
 const booking_entity_1 = require("../bookings/entities/booking.entity");
 const bookings_module_1 = require("../bookings/bookings.module");
-const notification_service_1 = require("../users/notification.service");
 const users_module_1 = require("../users/users.module");
 const notification_entity_1 = require("../users/entities/notification.entity");
 const notifications_module_1 = require("../notifications/notifications.module");
@@ -31,7 +30,7 @@ exports.ServiceProviderModule = ServiceProviderModule = __decorate([
             notifications_module_1.NotificationsModule,
         ],
         controllers: [service_provider_controller_1.ServiceProviderController],
-        providers: [service_provider_service_1.ServiceProviderService, notification_service_1.NotificationService],
+        providers: [service_provider_service_1.ServiceProviderService],
         exports: [service_provider_service_1.ServiceProviderService]
     })
 ], ServiceProviderModule);
