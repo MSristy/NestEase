@@ -1,8 +1,10 @@
-import { SwaggerUiOptions } from './swagger-ui-options.interface';
 import { OpenAPIObject } from './open-api-spec.interface';
+import { SwaggerUiOptions } from './swagger-ui-options.interface';
 export interface SwaggerCustomOptions {
     useGlobalPrefix?: boolean;
     swaggerUiEnabled?: boolean;
+    ui?: boolean;
+    raw?: boolean | Array<'json' | 'yaml'>;
     swaggerUrl?: string;
     jsonDocumentUrl?: string;
     yamlDocumentUrl?: string;
