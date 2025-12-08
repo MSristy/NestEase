@@ -84,7 +84,9 @@ export default function ProfilePage() {
     if (token) {
       checkAuth();
     } else {
-      localStorage.setItem('intendedDestination', pathname);
+      if (pathname) {
+        localStorage.setItem('intendedDestination', pathname);
+      }
       router.push('/auth/login');
     }
     // eslint-disable-next-line
@@ -212,7 +214,12 @@ export default function ProfilePage() {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
-      input.onchange = (e) => handleAvatarChange(e as React.ChangeEvent<HTMLInputElement>);
+      input.onchange = (e: Event) => {
+        const target = e.target as HTMLInputElement | null;
+        if (target) {
+          handleAvatarChange({ target } as React.ChangeEvent<HTMLInputElement>);
+        }
+      };
       input.click();
     }
   };
@@ -237,7 +244,9 @@ export default function ProfilePage() {
     try {
       const token = localStorage.getItem('token') as string;
       if (!token) {
-        localStorage.setItem('intendedDestination', pathname);
+        if (pathname) {
+          localStorage.setItem('intendedDestination', pathname);
+        }
         router.push('/auth/login');
         return;
       }
@@ -280,7 +289,9 @@ export default function ProfilePage() {
     try {
       const token = localStorage.getItem('token') as string;
       if (!token) {
-        localStorage.setItem('intendedDestination', pathname);
+        if (pathname) {
+          localStorage.setItem('intendedDestination', pathname);
+        }
         router.push('/auth/login');
         return;
       }
@@ -300,7 +311,9 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          localStorage.setItem('intendedDestination', pathname);
+          if (pathname) {
+            localStorage.setItem('intendedDestination', pathname);
+          }
           router.push('/auth/login');
           return;
         }
@@ -449,36 +462,36 @@ export default function ProfilePage() {
   };
 
   // --- Service Provider Bookings Section ---
-  function ServiceProviderBookingsSection({ user }) {
+  function ServiceProviderBookingsSection({ user }: { user: any }) {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedBooking, setSelectedBooking] = useState(null);
+    const [selectedBooking, setSelectedBooking] = useState<any>(null);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
     const [rejectionReason, setRejectionReason] = useState('');
 
-    useEffect(() => {
-      if (user?.id && user.role?.toLowerCase() === 'service_provider') {
-        const fetchMyBookings = async () => {
-          try {
-            setLoading(true);
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/service-providers/my-bookings', {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!response.ok) throw new Error('Failed to fetch bookings');
-            const data = await response.json();
-            setBookings(data);
-          } catch (error) {
-            toast.error('Failed to load bookings');
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchMyBookings();
+    const fetchMyBookings = async () => {
+      if (!(user?.id && user.role?.toLowerCase() === 'service_provider')) return;
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3001/service-providers/my-bookings', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) throw new Error('Failed to fetch bookings');
+        const data = await response.json();
+        setBookings(data);
+      } catch (error) {
+        toast.error('Failed to load bookings');
+      } finally {
+        setLoading(false);
       }
+    };
+
+    useEffect(() => {
+      fetchMyBookings();
     }, [user?.id, user?.role]);
 
-    const handleApproveBooking = async (bookingId) => {
+    const handleApproveBooking = async (bookingId: string) => {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/approve`, {
@@ -493,7 +506,7 @@ export default function ProfilePage() {
       }
     };
 
-    const handleRejectBooking = async () => {
+    const handleRejectBooking = async (): Promise<void> => {
       if (!selectedBooking || !rejectionReason.trim()) {
         toast.error('Please provide a reason for rejection');
         return;
@@ -516,7 +529,7 @@ export default function ProfilePage() {
       }
     };
 
-    const getStatusBadge = (status) => {
+    const getStatusBadge = (status: string) => {
       switch (status) {
         case 'pending_approval':
           return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Pending Approval</Badge>;

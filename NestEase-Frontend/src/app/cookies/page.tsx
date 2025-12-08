@@ -1,6 +1,6 @@
 'use client';
 
-import { FaCookieBite, FaCog, FaChartBar, FaUserCog, FaAd, FaBrowser, FaEnvelope } from 'react-icons/fa';
+import { FaCookieBite, FaCog, FaChartBar, FaUserCog, FaAd, FaGlobe, FaEnvelope } from 'react-icons/fa';
 
 export default function CookiePolicyPage() {
   const cookieTypes = [

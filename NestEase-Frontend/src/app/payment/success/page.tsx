@@ -34,6 +34,11 @@ export default function PaymentSuccessPage() {
       return;
     }
 
+    if (!searchParams) {
+      router.push('/property');
+      return;
+    }
+
     const paymentIntent = searchParams.get('payment_intent');
     const paymentIntentClientSecret = searchParams.get('payment_intent_client_secret');
     const redirectStatus = searchParams.get('redirect_status');

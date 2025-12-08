@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -307,7 +308,8 @@ const BarterPage = () => {
   useEffect(() => {
     const handleStorageChange = () => {
       const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-      setCartCount(cartItems.length);
+      const sellItems = cartItems.filter((item: any) => !item.type || item.type === 'sell');
+      setSellCartCount(sellItems.length);
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -2379,12 +2381,7 @@ const BarterPage = () => {
     const file = e.target.files?.[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setLocalExchangeFormData(prev => ({
-        ...prev,
-        image: file,
-        imagePreview: previewUrl
-      }));
-      // Also update the parent state
+      // Update the parent state
       setExchangeFormData(prev => ({
         ...prev,
         image: file,
@@ -2705,8 +2702,8 @@ const BarterPage = () => {
                               const cartItem = {
                                 id: offer.id,
                                 product_name: offer.product_name,
-                                price: parseFloat(offer.price),
-                                discount: parseFloat(offer.discount) || 0,
+                                price: typeof offer.price === 'number' ? offer.price : parseFloat(String(offer.price)),
+                                discount: typeof offer.discount === 'number' ? offer.discount : (parseFloat(String(offer.discount)) || 0),
                                 type: 'offer',
                                 images: offer.images
                               };

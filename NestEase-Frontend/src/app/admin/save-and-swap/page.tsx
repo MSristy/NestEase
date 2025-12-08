@@ -204,6 +204,10 @@ export default function AdminSaveAndSwapPage() {
       const aValue = a[sortBy as keyof SwapItem];
       const bValue = b[sortBy as keyof SwapItem];
       
+      if (aValue === undefined || bValue === undefined) {
+        return 0;
+      }
+      
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {

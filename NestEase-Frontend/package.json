@@ -12,12 +12,16 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@firebase/auth": "^1.10.1",
     "@firebase/firestore": "^4.7.11",
     "@firebase/functions": "^0.12.3",
     "@firebase/storage": "^0.13.7",
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^5.1.1",
+    "@mui/icons-material": "^7.3.6",
+    "@mui/material": "^7.3.6",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",

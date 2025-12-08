@@ -46,13 +46,23 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
     };
     fetchNotifications();
 
-    // Connect to socket
+    // Connect to socket using JWT auth in the handshake
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const socket = ioClient('http://localhost:3001', {
-      query: { userId: user.id },
+      auth: { token },
       transports: ['websocket'],
     });
 
+    socket.on('connect', () => {
+      console.log('Socket connected to notifications server:', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected from notifications server');
+    });
+
     socket.on('notification', (notification: Notification) => {
+      console.log('Received notification via socket:', notification);
       // Refetch notifications to get the latest state from backend
       fetchNotifications();
       toast(notification.message);
