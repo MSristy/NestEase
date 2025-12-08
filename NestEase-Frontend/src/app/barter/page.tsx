@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/context/CartContext';
+import { barterItems } from '../../data/data';
 
 // Add type definition for barter items
 interface BarterItem {
@@ -44,8 +45,7 @@ interface BarterItem {
   owner_email?: string;
 }
 
-// Mock items with more detailed data
-const barterItems: BarterItem[] = [];
+
 
 const priceRanges = [
   { id: 'range1', name: 'Under 5,000', min: 0, max: 5000 },
@@ -2731,7 +2731,7 @@ const BarterPage = () => {
                 <div className="col-span-full text-center py-8">
                 </div>
               ) : (
-                filteredItems.map((item, index) => {
+                filteredItems.map((item: any, index) => {
                   const itemInCart = isInCart(item.id);
 
                   return (
