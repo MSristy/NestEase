@@ -29,7 +29,7 @@ interface BarterItem {
 }
 
 // Import the barterItems array from the data file
-import { barterItems } from '../data';
+import { barterItems } from '@/data/data';
 
 const ItemDetailsPage = () => {
   const params = useParams();
@@ -49,7 +49,7 @@ const ItemDetailsPage = () => {
     if (params?.id) {
       const foundItem = barterItems.find(item => item.id === Number(params.id));
       if (foundItem) {
-        setItem(foundItem);
+        setItem(foundItem as any);
         // Check if item is in cart
         const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
         setIsInCart(cartItems.some((cartItem: BarterItem) => cartItem.id === foundItem.id));
