@@ -1,4 +1,18 @@
 import { NextResponse } from 'next/server';
+
+// DATABASE DISABLED: This endpoint connects to a local MySQL database,
+// which is not available on Vercel. The backend NestJS server handles this functionality.
+// Use the backend API instead at http://localhost:3001/add-yours (or your production endpoint)
+
+export async function POST(request: Request) {
+  return NextResponse.json(
+    { error: 'This endpoint has been disabled. Please use the NestJS backend API instead.' },
+    { status: 501 }
+  );
+}
+
+/*
+// ORIGINAL CODE (DISABLED - uses mysql2 which is not available on Vercel)
 import mysql from 'mysql2/promise';
 
 // Create a connection pool
@@ -101,6 +115,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to add item' }, { status: 500 });
   }
 }
+*/
 
 export async function GET() {
   try {

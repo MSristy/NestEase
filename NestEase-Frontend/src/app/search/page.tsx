@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FiHome, FiTool, FiShoppingBag } from 'react-icons/fi';
@@ -17,7 +17,7 @@ interface SearchResult {
   image?: string;
 }
 
-const SearchPage = () => {
+const SearchContent = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get('q');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -182,4 +182,10 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage; 
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>}>
+      <SearchContent />
+    </Suspense>
+  );
+} 
