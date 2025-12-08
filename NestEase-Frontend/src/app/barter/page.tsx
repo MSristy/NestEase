@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/context/CartContext';
-import { barterItems } from '../../data/data';
+import { barterItems } from '@/data/data'; 
 
 // Add type definition for barter items
 interface BarterItem {
