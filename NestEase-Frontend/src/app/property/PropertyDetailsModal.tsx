@@ -104,7 +104,7 @@ export default function PropertyDetailsModal({ propertyId, open, onClose }: Prop
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/${propertyId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${propertyId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,7 +147,7 @@ export default function PropertyDetailsModal({ propertyId, open, onClose }: Prop
     });
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/${propertyId}/book`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${propertyId}/book`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export default function PropertyDetailsModal({ propertyId, open, onClose }: Prop
     });
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/${propertyId}/buy`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${propertyId}/buy`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

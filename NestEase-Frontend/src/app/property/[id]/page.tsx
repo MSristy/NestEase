@@ -55,7 +55,7 @@ export default function PropertyDetailsPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -102,7 +102,7 @@ export default function PropertyDetailsPage() {
               <div className="relative h-96 w-full mb-6">
                 <Image
                   src={property.images && property.images.length > 0 
-                    ? `http://localhost:3001${property.images[selectedImage]}`
+                    ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[selectedImage]}`
                     : '/placeholder-property.jpg'}
                   alt={property.title}
                   fill
@@ -131,7 +131,7 @@ export default function PropertyDetailsPage() {
                       onClick={() => setSelectedImage(index)}
                     >
                       <Image
-                        src={`http://localhost:3001${image}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
                         alt={`Property image ${index + 1}`}
                         fill
                         sizes="(max-width: 768px) 25vw, 20vw"
@@ -230,7 +230,7 @@ export default function PropertyDetailsPage() {
                       onClick={async () => {
                         try {
                           const token = localStorage.getItem('token');
-                          const response = await fetch(`http://localhost:3001/properties/${property.id}/book`, {
+                          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${property.id}/book`, {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ export default function PropertyDetailsPage() {
                       onClick={async () => {
                         try {
                           const token = localStorage.getItem('token');
-                          const response = await fetch(`http://localhost:3001/properties/${property.id}/buy`, {
+                          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${property.id}/buy`, {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',

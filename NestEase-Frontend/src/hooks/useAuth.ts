@@ -42,7 +42,7 @@ export function useAuth() {
       }
 
       console.log('checkAuth: Making request to /users/profile');
-      const response = await apiFetch('http://localhost:3001/users/profile');
+      const response = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`);
       console.log('checkAuth: /users/profile response status:', response.status);
       
       if (response.ok) {
@@ -68,7 +68,7 @@ export function useAuth() {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export function useAuth() {
       // Store token
       localStorage.setItem('token', data.token);
       // Fetch user profile immediately after login
-      const profileResponse = await apiFetch('http://localhost:3001/users/profile');
+      const profileResponse = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`);
       console.log('login: /users/profile response status:', profileResponse.status);
       if (profileResponse.ok) {
         const userData = await profileResponse.json();
@@ -115,7 +115,7 @@ export function useAuth() {
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export function useAuth() {
       localStorage.setItem('token', data.token);
       
       // Fetch user profile immediately after registration
-      const profileResponse = await apiFetch('http://localhost:3001/users/profile');
+      const profileResponse = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`);
 
       if (profileResponse.ok) {
         const userData = await profileResponse.json();

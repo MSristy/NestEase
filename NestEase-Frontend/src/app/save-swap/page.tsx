@@ -126,7 +126,7 @@ export default function SaveSwapPage() {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/swap-items', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -150,7 +150,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/favorites', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/favorites', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -174,7 +174,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/item-history', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/item-history', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -195,7 +195,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/chat/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -216,7 +216,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/favorites/${itemId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites/${itemId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -244,7 +244,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/chat', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +273,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/swap-requests', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-requests', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -295,7 +295,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/swap-items', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -329,7 +329,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/swap-requests', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -357,7 +357,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/swap-requests/${requestId}/${accept ? 'accept' : 'reject'}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-requests/${requestId}/${accept ? 'accept' : 'reject'}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -119,7 +119,7 @@ export default function CreatePropertyPage() {
       
       // Use correct endpoint based on role
       const endpoint = user.role === 'LANDLORD' ? 'rent' : 'sale';
-      const response = await fetch(`http://localhost:3001/properties/${endpoint}` , {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${endpoint}` , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -196,7 +196,7 @@ export default function CreatePropertyPage() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/properties/upload', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

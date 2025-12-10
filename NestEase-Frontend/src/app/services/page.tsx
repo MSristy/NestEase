@@ -175,7 +175,7 @@ export default function ServicesPage() {
       const token = localStorage.getItem('token');
       if (!user) return;
       
-      const response = await fetch(`http://localhost:3001/service-providers/profile/${user.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/profile/${user.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -195,7 +195,7 @@ export default function ServicesPage() {
     try {
       setLoading(true);
       
-      const response = await fetch('http://localhost:3001/service-providers', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers', {
         // Remove Authorization header to make it public
       });
 
@@ -217,7 +217,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/service-providers/favorites', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/favorites', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -244,7 +244,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/service-providers/history', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/history', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -265,7 +265,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/service-providers/${serviceId}/favorite`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/${serviceId}/favorite`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -296,7 +296,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/service-providers/bookings', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -365,7 +365,7 @@ export default function ServicesPage() {
         address: address.trim(),
       };
 
-      const response = await fetch(`http://localhost:3001/service-providers/${selectedService.id}/book`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/${selectedService.id}/book`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -432,7 +432,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/cancel`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/cancel`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -484,7 +484,7 @@ export default function ServicesPage() {
       }
       
       // For cash payment, process directly
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/payment`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -529,7 +529,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/complete`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/complete`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -705,7 +705,7 @@ export default function ServicesPage() {
                 <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
                   <Image
                     src={service.images && service.images.length > 0 
-                      ? `http://localhost:3001${service.images[0]}` 
+                      ? `${process.env.NEXT_PUBLIC_API_URL}${service.images[0]}` 
                       : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'}
                     alt={service.businessName}
                     fill
@@ -929,7 +929,7 @@ export default function ServicesPage() {
                     <div className="relative h-48 md:h-full rounded-lg overflow-hidden">
                       <Image
                         src={booking.service.images && booking.service.images.length > 0 
-                          ? `http://localhost:3001${booking.service.images[0]}` 
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${booking.service.images[0]}` 
                           : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'}
                         alt={booking.service.businessName}
                         fill
@@ -1107,7 +1107,7 @@ export default function ServicesPage() {
                 <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
                   <Image
                     src={service.images && service.images.length > 0 
-                      ? `http://localhost:3001${service.images[0]}` 
+                      ? `${process.env.NEXT_PUBLIC_API_URL}${service.images[0]}` 
                       : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'}
                     alt={service.businessName}
                     fill
@@ -1134,7 +1134,7 @@ export default function ServicesPage() {
                 <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
                   <Image
                     src={service.images && service.images.length > 0 
-                      ? `http://localhost:3001${service.images[0]}` 
+                      ? `${process.env.NEXT_PUBLIC_API_URL}${service.images[0]}` 
                       : 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop'}
                     alt={service.businessName}
                     fill

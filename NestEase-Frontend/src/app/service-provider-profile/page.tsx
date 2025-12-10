@@ -133,7 +133,7 @@ export default function ServiceProviderProfilePage() {
 
       console.log('Sending data with images:', selectedImages.length);
 
-      const response = await fetch('http://localhost:3001/service-providers', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -167,7 +167,7 @@ export default function ServiceProviderProfilePage() {
         try {
           setLoading(true);
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:3001/service-providers/my-bookings', {
+          const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings', {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!response.ok) throw new Error('Failed to fetch bookings');

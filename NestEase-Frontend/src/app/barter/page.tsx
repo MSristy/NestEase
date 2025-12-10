@@ -347,8 +347,8 @@ const BarterPage = () => {
     try {
       setIsLoading(true);
       const url = category 
-        ? `http://localhost:3001/add-swap?category=${category}`
-        : 'http://localhost:3001/add-swap';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/add-swap?category=${category}`
+        : '${process.env.NEXT_PUBLIC_API_URL}/add-swap';
       
       const response = await fetch(url);
       if (!response.ok) {
@@ -372,8 +372,8 @@ const BarterPage = () => {
     try {
       setIsLoading(true);
       const url = category 
-        ? `http://localhost:3001/add-sell?category=${category}`
-        : 'http://localhost:3001/add-sell';
+        ? `${process.env.NEXT_PUBLIC_API_URL}/add-sell?category=${category}`
+        : '${process.env.NEXT_PUBLIC_API_URL}/add-sell';
       
       const response = await fetch(url);
       if (!response.ok) {
@@ -841,7 +841,7 @@ const BarterPage = () => {
           formData.append('image', file);
         }
 
-        const response = await fetch('http://localhost:3001/add-swap', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-swap', {
           method: 'POST',
           body: formData,
         });
@@ -1060,7 +1060,7 @@ const BarterPage = () => {
   const fetchItemDetails = async (id: number) => {
     try {
       setIsLoadingDetails(true);
-      const response = await fetch(`http://localhost:3001/add-swap/${id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-swap/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch item details');
       }
@@ -1084,7 +1084,7 @@ const BarterPage = () => {
     } else if (selectedTransactionType === 'sell') {
       try {
         setIsLoadingDetails(true);
-        const response = await fetch(`http://localhost:3001/add-sell/${item.id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-sell/${item.id}`);
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to fetch sell product details');
@@ -1119,7 +1119,7 @@ const BarterPage = () => {
     } else if (selectedTransactionType === 'offer') {
       try {
         setIsLoadingDetails(true);
-        const response = await fetch(`http://localhost:3001/add-offer/${item.id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-offer/${item.id}`);
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to fetch offer details');
@@ -1237,7 +1237,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localExchangeFormData.image);
         
-        const imageResponse = await fetch('http://localhost:3001/upload', {
+        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
           headers: {
@@ -1269,7 +1269,7 @@ const BarterPage = () => {
         console.log('Submitting exchange data:', exchangeData);
 
         // Submit to the exchange_product table
-        const response = await fetch('http://localhost:3001/exchange/add-exchange', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/exchange/add-exchange', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1673,7 +1673,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
         
-        const imageResponse = await fetch('http://localhost:3001/upload', {
+        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
         });
@@ -1696,11 +1696,11 @@ const BarterPage = () => {
           product_condition: localFormData.condition.trim(),
           location: localFormData.location.trim(),
           description: localFormData.description.trim(),
-          images: `http://localhost:3001${imageUrl}`
+          images: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
         };
 
         // Submit to the sell_product table
-        const response = await fetch('http://localhost:3001/add-sell', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-sell', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1991,7 +1991,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
         
-        const imageResponse = await fetch('http://localhost:3001/upload', {
+        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
         });
@@ -2015,11 +2015,11 @@ const BarterPage = () => {
           product_condition: localFormData.condition.trim(),
           location: localFormData.location.trim(),
           description: localFormData.description.trim(),
-          images: `http://localhost:3001${imageUrl}`
+          images: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
         };
 
         // Submit to the item_offer table
-        const response = await fetch('http://localhost:3001/add-offer', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-offer', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2285,7 +2285,7 @@ const BarterPage = () => {
   const fetchOffers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:3001/add-offer');
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-offer');
       if (!response.ok) {
         throw new Error('Failed to fetch offers');
       }
@@ -2318,7 +2318,7 @@ const BarterPage = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:3001/users/current-user', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/current-user', {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',

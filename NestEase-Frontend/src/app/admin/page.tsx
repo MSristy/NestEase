@@ -37,7 +37,7 @@ export default function AdminDashboard() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/admin/dashboard', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

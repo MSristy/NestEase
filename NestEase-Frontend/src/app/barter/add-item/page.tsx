@@ -51,7 +51,7 @@ export default function AddItemPage() {
       const token = localStorage.getItem('token');
       
       // First, create the item
-      const itemResponse = await fetch('http://localhost:3001/swap-items', {
+      const itemResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function AddItemPage() {
           formData.append('images', file);
         });
 
-        const imageResponse = await fetch(`http://localhost:3001/swap-items/${itemData.id}/images`, {
+        const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${itemData.id}/images`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,

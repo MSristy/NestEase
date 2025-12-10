@@ -54,7 +54,7 @@ export default function JobApplicationsPage() {
   const fetchApplications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/careers/applications', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/careers/applications', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -82,7 +82,7 @@ export default function JobApplicationsPage() {
         adminNotesText = `Date: ${interviewDetails.date}, Time: ${interviewDetails.time}, Location: ${interviewDetails.location}, Type: ${interviewDetails.type}\n\n${adminNotesText}`;
       }
 
-      const response = await fetch(`http://localhost:3001/careers/applications/${id}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/careers/applications/${id}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -113,7 +113,7 @@ export default function JobApplicationsPage() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/careers/applications/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/careers/applications/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

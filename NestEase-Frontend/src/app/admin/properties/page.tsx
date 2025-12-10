@@ -61,7 +61,7 @@ export default function PropertiesPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/admin/properties', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/properties', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,7 +90,7 @@ export default function PropertiesPage() {
 
   const handleVerify = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/admin/property/${id}/verify`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/property/${id}/verify`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -108,7 +108,7 @@ export default function PropertiesPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this property?')) return;
     try {
-      const response = await fetch(`http://localhost:3001/admin/property/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/property/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

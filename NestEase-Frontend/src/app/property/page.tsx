@@ -86,7 +86,7 @@ export default function PropertiesPage() {
     setCartItems(storedCartItems);
 
     if (user && user.id) {
-      const socket = ioClient('http://localhost:3001', {
+      const socket = ioClient('${process.env.NEXT_PUBLIC_API_URL}', {
         query: { userId: user.id },
         transports: ['websocket'],
       });
@@ -102,7 +102,7 @@ export default function PropertiesPage() {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = 'http://localhost:3001/properties';
+      let url = '${process.env.NEXT_PUBLIC_API_URL}/properties';
       // Filter by user role
       if (user) {
         if (user.role === 'TENANT') {

@@ -104,7 +104,7 @@ export default function SettingsPage() {
     if (!token) return;
 
     // Fetch profile
-    fetch('http://localhost:3001/users/profile', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -115,7 +115,7 @@ export default function SettingsPage() {
       });
 
     // Fetch notifications
-    fetch('http://localhost:3001/users/notifications', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -125,7 +125,7 @@ export default function SettingsPage() {
       });
 
     // Fetch privacy
-    fetch('http://localhost:3001/users/privacy', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/privacy', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -136,7 +136,7 @@ export default function SettingsPage() {
     // Fetch addresses
     setIsLoadingAddresses(true);
     setAddressError(null);
-    fetch('http://localhost:3001/users/addresses', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {
@@ -161,7 +161,7 @@ export default function SettingsPage() {
       });
 
     // Fetch connected accounts
-    fetch('http://localhost:3001/users/connected-accounts', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/connected-accounts', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -173,7 +173,7 @@ export default function SettingsPage() {
     setIsUpdatingProfile(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/profile', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ export default function SettingsPage() {
     setIsChangingPassword(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/change-password', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/change-password', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ export default function SettingsPage() {
     setIsSavingNotifications(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/notifications', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ export default function SettingsPage() {
     setIsSavingPrivacy(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/privacy', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/privacy', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ export default function SettingsPage() {
     setIsDeleting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/profile', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -325,7 +325,7 @@ export default function SettingsPage() {
     setIsAddingAddress(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/addresses', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -349,7 +349,7 @@ export default function SettingsPage() {
   const handleDeleteAddress = async (id: number) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:3001/users/addresses/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -384,7 +384,7 @@ export default function SettingsPage() {
   const handleDisconnectAccount = async (id: number) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:3001/users/connected-accounts/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/connected-accounts/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -399,7 +399,7 @@ export default function SettingsPage() {
   const handleSaveCustomization = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('http://localhost:3001/users/customization', {
+      await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/customization', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -642,7 +642,7 @@ export default function SettingsPage() {
                       const token = localStorage.getItem('token');
                       if (token) {
                         setIsLoadingAddresses(true);
-                        fetch('http://localhost:3001/users/addresses', {
+                        fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
                           headers: { Authorization: `Bearer ${token}` },
                         })
                           .then(res => res.json())

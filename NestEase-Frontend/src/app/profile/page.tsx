@@ -120,7 +120,7 @@ export default function ProfilePage() {
           if (!token) {
             throw new Error('No authentication token found');
           }
-          const response = await fetch(`http://localhost:3001/exchange/user/${encodeURIComponent(user.email)}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exchange/user/${encodeURIComponent(user.email)}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -154,7 +154,7 @@ export default function ProfilePage() {
           if (!token) {
             throw new Error('No authentication token found');
           }
-          const response = await fetch(`http://localhost:3001/add-swap/user/${encodeURIComponent(user.email)}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-swap/user/${encodeURIComponent(user.email)}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -185,7 +185,7 @@ export default function ProfilePage() {
           if (!token) {
             throw new Error('No authentication token found');
           }
-          const response = await fetch('http://localhost:3001/users/user-notifications', {
+          const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/user-notifications', {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -254,7 +254,7 @@ export default function ProfilePage() {
     const formDataObj = new FormData();
     formDataObj.append('avatar', file);
 
-      const response = await fetch('http://localhost:3001/users/profile/avatar', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile/avatar', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formDataObj,
@@ -296,7 +296,7 @@ export default function ProfilePage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/users/profile', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -360,7 +360,7 @@ export default function ProfilePage() {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch(`http://localhost:3001/exchange/${productId}/accept`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exchange/${productId}/accept`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -397,7 +397,7 @@ export default function ProfilePage() {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch(`http://localhost:3001/exchange/${productId}/decline`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exchange/${productId}/decline`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -439,7 +439,7 @@ export default function ProfilePage() {
     setPasswordLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/users/change-password', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/change-password', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -474,7 +474,7 @@ export default function ProfilePage() {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3001/service-providers/my-bookings', {
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -494,7 +494,7 @@ export default function ProfilePage() {
     const handleApproveBooking = async (bookingId: string) => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/approve`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/approve`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -513,7 +513,7 @@ export default function ProfilePage() {
       }
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3001/service-providers/bookings/${selectedBooking.id}/reject`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${selectedBooking.id}/reject`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({ reason: rejectionReason }),
@@ -688,7 +688,7 @@ export default function ProfilePage() {
       setLoading(true);
       setError('');
       const token = localStorage.getItem('token');
-      fetch('http://localhost:3001/properties/pending-purchases', {
+      fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases', {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => {
@@ -715,7 +715,7 @@ export default function ProfilePage() {
       setActionLoading(purchaseId);
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3001/properties/purchases/${purchaseId}/approve`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/purchases/${purchaseId}/approve`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -736,7 +736,7 @@ export default function ProfilePage() {
       setActionLoading(purchaseId);
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3001/properties/purchases/${purchaseId}/reject`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/purchases/${purchaseId}/reject`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -815,7 +815,7 @@ export default function ProfilePage() {
           try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/properties/my-bookings', {
+            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch purchases');
@@ -903,7 +903,7 @@ export default function ProfilePage() {
           try {
       setLoading(true);
       const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/properties/pending-requests', {
+            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests', {
         headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch pending requests');
@@ -924,7 +924,7 @@ export default function ProfilePage() {
       setActionLoading(requestId);
       try {
       const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3001/properties/bookings/${requestId}/approve`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${requestId}/approve`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -954,7 +954,7 @@ export default function ProfilePage() {
       setActionLoading(requestId);
       try {
       const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3001/properties/bookings/${requestId}/reject`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${requestId}/reject`, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -1177,7 +1177,7 @@ export default function ProfilePage() {
     const handleApprove = async (swapRequestId) => {
       setActionLoading(swapRequestId);
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:3001/save-and-swap/requests/${swapRequestId}/approve`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/save-and-swap/requests/${swapRequestId}/approve`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -1188,7 +1188,7 @@ export default function ProfilePage() {
     const handleReject = async (swapRequestId) => {
       setActionLoading(swapRequestId);
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:3001/save-and-swap/requests/${swapRequestId}/reject`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/save-and-swap/requests/${swapRequestId}/reject`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -1261,7 +1261,7 @@ export default function ProfilePage() {
                   {product.images && (
                     <div className="mb-2">
                       <img 
-                        src={`http://localhost:3001${product.images}`} 
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.images}`} 
                         alt={product.productName} 
                         className="w-full h-40 object-cover rounded mb-2"
                         onError={(e) => {
@@ -1417,7 +1417,7 @@ export default function ProfilePage() {
           try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/properties/my-bookings', {
+            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -1470,7 +1470,7 @@ export default function ProfilePage() {
         }
         
         // For cash payment, process directly
-        const response = await fetch(`http://localhost:3001/properties/bookings/${selectedBooking.id}/payment`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${selectedBooking.id}/payment`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1491,7 +1491,7 @@ export default function ProfilePage() {
         setSelectedBooking(null);
         
         // Refresh bookings
-        const refreshResponse = await fetch('http://localhost:3001/properties/my-bookings', {
+        const refreshResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (refreshResponse.ok) {

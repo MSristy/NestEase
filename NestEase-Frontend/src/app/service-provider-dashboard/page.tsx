@@ -51,7 +51,7 @@ export default function ServiceProviderDashboard() {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/service-providers/my-bookings', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,7 +75,7 @@ export default function ServiceProviderDashboard() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${bookingId}/approve`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/approve`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -103,7 +103,7 @@ export default function ServiceProviderDashboard() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${selectedBooking.id}/reject`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${selectedBooking.id}/reject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

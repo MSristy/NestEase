@@ -79,7 +79,7 @@ export default function PropertyDashboard() {
   const fetchMyProperties = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/properties/my', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch properties');
@@ -93,7 +93,7 @@ export default function PropertyDashboard() {
   const fetchMyBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/properties/my-bookings', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -107,7 +107,7 @@ export default function PropertyDashboard() {
   const fetchPendingRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/properties/pending-requests', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch pending requests');
@@ -121,7 +121,7 @@ export default function PropertyDashboard() {
   const fetchPendingPurchases = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/properties/pending-purchases', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch pending purchases');
@@ -135,7 +135,7 @@ export default function PropertyDashboard() {
   const handleApproveBooking = async (bookingId: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/bookings/${bookingId}/approve`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${bookingId}/approve`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -154,7 +154,7 @@ export default function PropertyDashboard() {
   const handleRejectBooking = async (bookingId: string, reason: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/bookings/${bookingId}/reject`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${bookingId}/reject`, {
         method: 'POST',
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ export default function PropertyDashboard() {
   const handleApprovePurchase = async (purchaseId: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/purchases/${purchaseId}/approve`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/purchases/${purchaseId}/approve`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -195,7 +195,7 @@ export default function PropertyDashboard() {
   const handleRejectPurchase = async (purchaseId: string, reason: string) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/properties/purchases/${purchaseId}/reject`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/purchases/${purchaseId}/reject`, {
         method: 'POST',
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -576,7 +576,7 @@ function MyRequestsSection({ user }: { user: any }) {
     if (!user) return;
     setLoading(true);
     const token = localStorage.getItem('token');
-    fetch('http://localhost:3001/properties/my-bookings', {
+    fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -657,7 +657,7 @@ const renderPropertyCard = (recommendation: any) => {
       <div className="relative">
         {property.images && property.images.length > 0 ? (
           <img
-            src={`http://localhost:3001${property.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}`}
             alt={property.title || 'Property'}
             className="w-full h-48 object-cover"
             onError={(e) => { e.currentTarget.src = '/images/placeholder.jpg'; }}

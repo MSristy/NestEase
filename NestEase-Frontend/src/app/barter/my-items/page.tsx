@@ -39,7 +39,7 @@ export default function MyItemsPage() {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/swap-items/my-items', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items/my-items', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,7 +65,7 @@ export default function MyItemsPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/swap-items/${itemId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${itemId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

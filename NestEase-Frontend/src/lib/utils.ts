@@ -8,10 +8,10 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Constructs a proper image URL for external images
  * @param imagePath - The image path from the backend
- * @param baseUrl - The base URL for the backend (default: http://localhost:3001)
+ * @param baseUrl - The base URL for the backend (default: process.env.NEXT_PUBLIC_API_URL)
  * @returns The complete image URL
  */
-export function getImageUrl(imagePath: string, baseUrl: string = 'http://localhost:3001'): string {
+export function getImageUrl(imagePath: string, baseUrl: string = process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL}'): string {
   console.log('getImageUrl called with:', { imagePath, baseUrl });
   
   if (!imagePath) {

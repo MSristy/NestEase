@@ -19,7 +19,7 @@ export default function ContactPage() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:3001/contact-messages', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact-messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -25,8 +25,8 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const [statsRes, usersRes] = await Promise.all([
-          fetch('http://localhost:3001/admin/dashboard'),
-          fetch('http://localhost:3001/admin/users')
+          fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard'),
+          fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/users')
         ]);
 
         const statsData = await statsRes.json();
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
 
   const handleUserStatusChange = async (userId: number, isActive: boolean) => {
     try {
-      const response = await fetch(`http://localhost:3001/admin/users/${userId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/admin/users/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: 'DELETE',
       });
 

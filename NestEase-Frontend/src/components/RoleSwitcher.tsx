@@ -87,7 +87,7 @@ export default function RoleSwitcher() {
 
     setSwitchingRole(roleName);
     try {
-      const response = await apiFetch('http://localhost:3001/users/switch-role', {
+      const response = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/switch-role`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

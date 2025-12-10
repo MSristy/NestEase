@@ -56,7 +56,7 @@ function PaymentSuccessContent() {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/payments/confirm/${paymentIntentId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/confirm/${paymentIntentId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

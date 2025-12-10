@@ -75,7 +75,7 @@ export default function BookingsPage() {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:3001/bookings', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ export default function BookingsPage() {
       setCancellingId(bookingId);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/bookings/${bookingId}/cancel`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${bookingId}/cancel`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ export default function BookingsPage() {
       setSubmittingReview(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/bookings/${bookingId}/review`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${bookingId}/review`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ export default function BookingsPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/bookings/export?format=${format}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/export?format=${format}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

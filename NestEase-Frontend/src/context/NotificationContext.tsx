@@ -32,7 +32,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
     if (!user) return;
     // Fetch initial notifications
     const fetchNotifications = async () => {
-      const response = await apiFetch(`http://localhost:3001/notifications/my`);
+      const response = await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/my`);
       const data = await response.json();
       const notificationsArray = Array.isArray(data)
         ? data
@@ -48,7 +48,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
 
     // Connect to socket using JWT auth in the handshake
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    const socket = ioClient('http://localhost:3001', {
+    const socket = ioClient(process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL}', {
       auth: { token },
       transports: ['websocket'],
     });
@@ -74,13 +74,13 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   }, [user]);
 
   const markAllAsRead = async () => {
-    await apiFetch(`http://localhost:3001/notifications/read-all`, { method: 'POST' });
+    await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/read-all`, { method: 'POST' });
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     setUnreadCount(0);
   };
 
   const markAsRead = async (id: number) => {
-    await apiFetch(`http://localhost:3001/users/notifications/${id}/read`, { method: 'PUT' });
+    await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications/${id}/read`, { method: 'PUT' });
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     setUnreadCount(prev => Math.max(0, prev - 1));
   };

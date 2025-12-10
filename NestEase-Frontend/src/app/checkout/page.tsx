@@ -186,7 +186,7 @@ export default function CheckoutPage() {
     
     // If this is a service booking from the cart, process the payment
     if (item.serviceBooking) {
-      const response = await fetch(`http://localhost:3001/service-providers/bookings/${item.serviceBooking.id}/payment`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${item.serviceBooking.id}/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
       address: formData.address,
     };
 
-    const response = await fetch(`http://localhost:3001/service-providers/${item.id}/book`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/${item.id}/book`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
     
     // If this is a property booking from the cart, process the payment
     if (item.propertyBooking) {
-      const response = await fetch(`http://localhost:3001/properties/bookings/${item.propertyBooking.id}/payment`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${item.propertyBooking.id}/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -277,7 +277,7 @@ export default function CheckoutPage() {
       notes: formData.notes,
     };
 
-    const response = await fetch(`http://localhost:3001/properties/${item.id}/book`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${item.id}/book`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
       notes: formData.notes,
     };
 
-    const response = await fetch(`http://localhost:3001/orders`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

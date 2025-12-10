@@ -88,7 +88,7 @@ export default function PropertiesPage() {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = 'http://localhost:3001/properties';
+      let url = '${process.env.NEXT_PUBLIC_API_URL}/properties';
       // Filter by user role
       if (user) {
         if (user.role === 'TENANT') {
@@ -333,7 +333,7 @@ export default function PropertiesPage() {
               <div className="relative h-48 w-full">
                 <Image
                   src={property.images && property.images.length > 0 
-                    ? `http://localhost:3001${property.images[0]}`
+                    ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}`
                     : '/placeholder-property.jpg'}
                   alt={property.title}
                   fill

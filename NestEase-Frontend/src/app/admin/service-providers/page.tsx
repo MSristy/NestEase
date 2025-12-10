@@ -50,7 +50,7 @@ export default function ServiceProvidersPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/admin/service-providers', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/service-providers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -79,7 +79,7 @@ export default function ServiceProvidersPage() {
 
   const handleVerify = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3001/admin/service-providers/${id}/verify`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/service-providers/${id}/verify`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -97,7 +97,7 @@ export default function ServiceProvidersPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this service provider?')) return;
     try {
-      const response = await fetch(`http://localhost:3001/admin/service-providers/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/service-providers/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

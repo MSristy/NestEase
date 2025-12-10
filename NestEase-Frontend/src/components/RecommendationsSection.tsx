@@ -74,7 +74,7 @@ export default function RecommendationsSection({
       setLoading(true);
       setError(null);
 
-      let url = 'http://localhost:3001/recommendations/';
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/recommendations/`;
       
       switch (type) {
         case 'personalized':

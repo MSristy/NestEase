@@ -32,7 +32,7 @@ const UsersPage = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/admin/users', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const UsersPage = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/admin/users/${userId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -92,7 +92,7 @@ const UsersPage = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/admin/users/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

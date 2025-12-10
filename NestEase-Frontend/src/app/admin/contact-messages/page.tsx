@@ -77,7 +77,7 @@ export default function ContactMessagesPage() {
   const fetchMessages = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/contact-messages', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/contact-messages', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -106,7 +106,7 @@ export default function ContactMessagesPage() {
     setReplying(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/contact-messages/${selectedMessage.id}/reply`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact-messages/${selectedMessage.id}/reply`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

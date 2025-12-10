@@ -33,7 +33,7 @@ export default function AdminManagementPage() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/admin/users', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +53,7 @@ export default function AdminManagementPage() {
   const fetchAdmins = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/admin/admins', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/admins', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +74,7 @@ export default function AdminManagementPage() {
     try {
       setPromotingUserId(userId);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/admin/promote-user', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/promote-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -35,7 +35,7 @@ export default function AboutPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/public/stats');
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/public/stats');
       if (response.ok) {
         const data = await response.json();
         setStats(data);

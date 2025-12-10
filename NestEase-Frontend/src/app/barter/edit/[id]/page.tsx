@@ -55,7 +55,7 @@ export default function EditItemPage({ params }: { params: { id: string } }) {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/swap-items/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${params.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -84,7 +84,7 @@ export default function EditItemPage({ params }: { params: { id: string } }) {
       setSaving(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/swap-items/${params.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export default function EditItemPage({ params }: { params: { id: string } }) {
       });
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/swap-items/${params.id}/images`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${params.id}/images`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

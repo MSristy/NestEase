@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 // DATABASE DISABLED: This endpoint connects to a local MySQL database,
 // which is not available on Vercel. The backend NestJS server handles this functionality.
-// Use the backend API instead at http://localhost:3001/add-yours (or your production endpoint)
+// Use the backend API instead at ${process.env.NEXT_PUBLIC_API_URL}/add-yours (or your production endpoint)
 
 export async function POST(request: Request) {
   return NextResponse.json(

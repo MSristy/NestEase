@@ -79,9 +79,9 @@ export default function AdminSaveAndSwapPage() {
 
       // Fetch all three types of items
       const [swapResponse, sellResponse, offerResponse] = await Promise.all([
-        fetch('http://localhost:3001/admin/add-swap-items', { headers }),
-        fetch('http://localhost:3001/admin/sell-products', { headers }),
-        fetch('http://localhost:3001/admin/item-offers', { headers }),
+        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/add-swap-items', { headers }),
+        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/sell-products', { headers }),
+        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/item-offers', { headers }),
       ]);
 
       let swapData = [];
@@ -133,7 +133,7 @@ export default function AdminSaveAndSwapPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('http://localhost:3001/admin/barter-stats', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/barter-stats', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -158,7 +158,7 @@ export default function AdminSaveAndSwapPage() {
       const endpoint = type === 'swap' ? 'add-swap-items' : 
                       type === 'sell' ? 'sell-products' : 'item-offers';
       
-      const response = await fetch(`http://localhost:3001/admin/${endpoint}/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/${endpoint}/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -243,12 +243,12 @@ export default function AdminSaveAndSwapPage() {
     
     // If it's a relative path, make it absolute
     if (imagePath.startsWith('/')) {
-      return `http://localhost:3001${imagePath}`;
+      return `${process.env.NEXT_PUBLIC_API_URL}${imagePath}`;
     }
     
     // If it's just a filename, construct the full path
     const uploadPath = activeTab === 'swap' ? 'swaps' : activeTab === 'sell' ? 'products' : 'products';
-    return `http://localhost:3001/uploads/${uploadPath}/${imagePath}`;
+    return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${uploadPath}/${imagePath}`;
   };
 
   if (loading) {

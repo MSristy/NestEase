@@ -105,7 +105,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       const token = localStorage.getItem('token');
       
       // Fetch booking details
-      const bookingResponse = await fetch(`http://localhost:3001/bookings/${params.id}`, {
+      const bookingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${params.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,7 +119,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       setBooking(bookingData);
 
       // Create payment intent
-      const paymentResponse = await fetch(`http://localhost:3001/payments/create-intent`, {
+      const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/create-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

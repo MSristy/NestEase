@@ -29,7 +29,7 @@ export default function NotificationsPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/users/notifications', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default function NotificationsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/users/notifications/${notificationId}/read`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications/${notificationId}/read`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -77,7 +77,7 @@ export default function NotificationsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3001/users/notifications/${notificationId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications/${notificationId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -98,7 +98,7 @@ export default function NotificationsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('http://localhost:3001/users/notifications/read-all', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications/read-all', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
