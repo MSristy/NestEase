@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaMapMarkerAlt, FaBath, FaBed, FaHome, FaSearch, FaFilter, FaPlus, FaBuilding, FaHouseUser, FaCrown, FaDoorOpen, FaEllipsisH } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaBath, FaBed, FaHome, FaSearch, FaFilter, FaPlus, FaBuilding, FaHouseUser, FaCrown, FaDoorOpen, FaEllipsisH, FaHeart } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -43,7 +43,7 @@ interface Property {
 const PROPERTY_CATEGORIES = [
   'All',
   'Apartment',
-  'House', 
+  'House',
   'Villa',
   'Studio',
   'Condo'
@@ -88,7 +88,7 @@ export default function PropertiesPage() {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = '${process.env.NEXT_PUBLIC_API_URL}/properties';
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/properties`;
       // Filter by user role
       if (user) {
         if (user.role === 'TENANT') {
@@ -182,16 +182,15 @@ export default function PropertiesPage() {
                 key={category}
                 onClick={() => setCategoryFilter(category === categoryFilter ? 'All' : category)}
                 className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all duration-300 border-2
-                  ${categoryFilter === category 
-                    ? 'bg-blue-600 text-white shadow-lg scale-105 border-blue-600' 
+                  ${categoryFilter === category
+                    ? 'bg-blue-600 text-white shadow-lg scale-105 border-blue-600'
                     : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600'
                   }`}
               >
-                <div className={`p-3 rounded-lg mb-2 ${
-                  categoryFilter === category 
-                    ? 'bg-white text-blue-600' 
+                <div className={`p-3 rounded-lg mb-2 ${categoryFilter === category
+                    ? 'bg-white text-blue-600'
                     : 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
-                }`}>
+                  }`}>
                   <Icon className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-medium text-center">{category}</span>
@@ -325,8 +324,8 @@ export default function PropertiesPage() {
             <CardContent className="p-0">
               <div className="relative h-48">
                 <Image
-                  src={property.images && property.images.length > 0 
-                    ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}` 
+                  src={property.images && property.images.length > 0
+                    ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}`
                     : '/placeholder-property.jpg'}
                   alt={property.title}
                   fill
@@ -370,22 +369,22 @@ export default function PropertiesPage() {
                   <span>{property.location}</span>
                 </div>
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="flex-1"
                     onClick={() => setSelectedPropertyId(property.id)}
                   >
                     View Details
                   </Button>
-                  <Button 
+                  <Button
                     className="flex-1"
                     onClick={() => {
                       const newItem = {
                         id: property.id,
                         title: property.title,
                         price: property.price,
-                        images: property.images && property.images.length > 0 
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}` 
+                        images: property.images && property.images.length > 0
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${property.images[0]}`
                           : '/placeholder-property.jpg',
                         location: property.location,
                         owner: property.owner,
@@ -413,6 +412,7 @@ export default function PropertiesPage() {
       {selectedPropertyId && (
         <PropertyDetailsModal
           propertyId={selectedPropertyId}
+          open={true}
           onClose={() => setSelectedPropertyId(null)}
         />
       )}

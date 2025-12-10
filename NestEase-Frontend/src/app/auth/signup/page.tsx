@@ -27,16 +27,16 @@ type SignupFormValues = z.infer<typeof formSchema>;
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const { register, handleSubmit, watch, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       userType: 'general'
     }
   });
-  
+
   const password = watch('password');
-  
+
   // Map userType to role
   const getUserRole = (userType: string): Role => {
     switch (userType) {
@@ -55,13 +55,13 @@ const SignupPage = () => {
         return Role.USER;
     }
   };
-  
+
   const onSubmit = async (data: SignupFormValues) => {
     const mappedRole = getUserRole(data.userType);
     console.log('Submitting signup with role:', mappedRole);
-    
+
     try {
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/auth/signup', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,11 +81,11 @@ const SignupPage = () => {
 
       const result = await response.json();
       console.log('Signup successful:', result);
-      
+
       // Store user data in localStorage
       localStorage.setItem('token', result.access_token);
       localStorage.setItem('user', JSON.stringify(result.user));
-      
+
       // Redirect to appropriate page based on role
       if (mappedRole === Role.SERVICE_PROVIDER) {
         window.location.href = '/service-provider-profile';
@@ -111,7 +111,7 @@ const SignupPage = () => {
               Join NestEase to find properties, book services, and swap items
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
@@ -144,7 +144,7 @@ const SignupPage = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -160,7 +160,7 @@ const SignupPage = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
               )}
             </div>
-            
+
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -185,7 +185,7 @@ const SignupPage = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
               )}
             </div>
-            
+
             {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -210,7 +210,7 @@ const SignupPage = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
               )}
             </div>
-            
+
             {/* User Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -228,7 +228,7 @@ const SignupPage = () => {
                 <option value="service_provider">Service Provider</option>
               </select>
             </div>
-            
+
             {/* Terms and Conditions */}
             <div className="flex items-start">
               <input
@@ -244,7 +244,7 @@ const SignupPage = () => {
             {errors.agreeTerms && (
               <p className="text-sm text-red-600">{errors.agreeTerms.message}</p>
             )}
-            
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -253,7 +253,7 @@ const SignupPage = () => {
               Create Account
             </button>
           </form>
-          
+
           {/* Social Signup Options */}
           <div className="mt-6">
             <div className="relative">
@@ -266,7 +266,7 @@ const SignupPage = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -284,7 +284,7 @@ const SignupPage = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Login Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -296,7 +296,7 @@ const SignupPage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Right Side - Image */}
       <div className="hidden lg:block lg:w-1/2 bg-gradient-to-r from-blue-600 to-indigo-700">
         <div className="h-full w-full relative flex items-center justify-center">

@@ -29,7 +29,7 @@ export default function NotificationsPage() {
         return;
       }
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export default function NotificationsPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications/read-all', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications/read-all`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -177,9 +177,8 @@ export default function NotificationsPage() {
               filteredNotifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-6 ${
-                    !notification.isRead ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                  }`}
+                  className={`p-6 ${!notification.isRead ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                    }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">

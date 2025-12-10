@@ -86,7 +86,7 @@ export default function PropertiesPage() {
     setCartItems(storedCartItems);
 
     if (user && user.id) {
-      const socket = ioClient('${process.env.NEXT_PUBLIC_API_URL}', {
+      const socket = ioClient(`${process.env.NEXT_PUBLIC_API_URL}`, {
         query: { userId: user.id },
         transports: ['websocket'],
       });
@@ -102,7 +102,7 @@ export default function PropertiesPage() {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      let url = '${process.env.NEXT_PUBLIC_API_URL}/properties';
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/properties`;
       // Filter by user role
       if (user) {
         if (user.role === 'TENANT') {
@@ -199,16 +199,15 @@ export default function PropertiesPage() {
                 key={category}
                 onClick={() => setCategoryFilter(category === categoryFilter ? 'all' : category)}
                 className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all duration-300 border-2
-                  ${categoryFilter === category 
-                    ? 'bg-blue-600 text-white shadow-lg scale-105 border-blue-600' 
+                  ${categoryFilter === category
+                    ? 'bg-blue-600 text-white shadow-lg scale-105 border-blue-600'
                     : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600'
                   }`}
               >
-                <div className={`p-3 rounded-lg mb-2 ${
-                  categoryFilter === category 
-                    ? 'bg-white text-blue-600' 
+                <div className={`p-3 rounded-lg mb-2 ${categoryFilter === category
+                    ? 'bg-white text-blue-600'
                     : 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
-                }`}>
+                  }`}>
                   <Icon className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-medium text-center">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
@@ -254,33 +253,33 @@ export default function PropertiesPage() {
                         src={getImageUrl(item.images[0])}
                         alt={item.title}
                         className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-lg">{item.product_name || item.title}</h3>
-                      <p className="text-sm text-gray-600">By {item.owner_name || item.owner?.name}</p>
-                      <p className="text-sm text-gray-600">Location: {item.location}</p>
-                      <div className="flex items-center">
-                        <span className="text-xl font-bold">৳{item.price}</span>
-                        {item.discount > 0 && (
-                          <span className="ml-2 text-sm text-green-600">
-                            {item.discount}% off
-                          </span>
-                        )}
-                      </div>
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-lg">{item.product_name || item.title}</h3>
+                    <p className="text-sm text-gray-600">By {item.owner_name || item.owner?.name}</p>
+                    <p className="text-sm text-gray-600">Location: {item.location}</p>
+                    <div className="flex items-center">
+                      <span className="text-xl font-bold">৳{item.price}</span>
+                      {item.discount > 0 && (
+                        <span className="ml-2 text-sm text-green-600">
+                          {item.discount}% off
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      const updatedCart = cartItems.filter(cartItem => cartItem.id !== item.id);
-                      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-                      setCartItems(updatedCart);
-                    }}
-                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm"
-                  >
-                    Remove
-                  </button>
+                </div>
+                <button
+                  onClick={() => {
+                    const updatedCart = cartItems.filter(cartItem => cartItem.id !== item.id);
+                    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+                    setCartItems(updatedCart);
+                  }}
+                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm"
+                >
+                  Remove
+                </button>
               </div>
             ))}
           </div>
@@ -356,9 +355,9 @@ export default function PropertiesPage() {
                       });
                       return imageUrl;
                     })()}
-                  alt={property.title}
+                    alt={property.title}
                     className="w-full h-full object-cover"
-                  onError={(e) => {
+                    onError={(e) => {
                       console.error('Image failed to load:', property.images?.[0]);
                       handleImageError(e, '/images/placeholder.jpg');
                     }}
@@ -385,30 +384,30 @@ export default function PropertiesPage() {
                   </div>
                 )}
               </div>
-              
+
               {/* Property Type and Category badges - top right of card below image */}
               <div className="absolute top-48 right-4 flex flex-col gap-1 z-10">
                 <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold capitalize shadow">
-                      {property.type}
-                    </span>
-                    {property.category && (
+                  {property.type}
+                </span>
+                {property.category && (
                   <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold capitalize shadow">
-                        {property.category}
-                      </span>
-                    )}
-                  </div>
-              
+                    {property.category}
+                  </span>
+                )}
+              </div>
+
               <CardContent className="p-4">
                 {/* Property Title with descriptive format */}
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                   {property.bedrooms} Bed {property.type}
                 </h3>
-                
+
                 {/* Owner Name */}
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                   By {property.owner?.name || 'Owner'}
                 </p>
-                
+
                 <p className="text-2xl font-bold text-blue-600 mb-2">
                   {property.type === 'SALE'
                     ? `৳${property.price.toLocaleString()}`
@@ -463,17 +462,17 @@ export default function PropertiesPage() {
       )}
 
       {/* AI-Powered Recommendations */}
-      <RecommendationsSection 
-        title="Recommended for You" 
-        type="personalized" 
-        limit={6} 
+      <RecommendationsSection
+        title="Recommended for You"
+        type="personalized"
+        limit={6}
       />
 
       {/* Trending Properties */}
-      <RecommendationsSection 
-        title="Trending Properties" 
-        type="trending" 
-        limit={6} 
+      <RecommendationsSection
+        title="Trending Properties"
+        type="trending"
+        limit={6}
       />
 
       <DropdownMenu>

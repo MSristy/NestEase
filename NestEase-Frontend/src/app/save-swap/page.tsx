@@ -125,8 +125,8 @@ export default function SaveSwapPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -149,8 +149,8 @@ export default function SaveSwapPage() {
   const fetchFavorites = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/favorites', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -173,8 +173,8 @@ export default function SaveSwapPage() {
   const fetchItemHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/item-history', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/item-history`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -194,7 +194,7 @@ export default function SaveSwapPage() {
   const fetchChatMessages = async (userId: string) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -215,7 +215,7 @@ export default function SaveSwapPage() {
   const handleToggleFavorite = async (itemId: string) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites/${itemId}`, {
         method: 'POST',
         headers: {
@@ -227,8 +227,8 @@ export default function SaveSwapPage() {
         throw new Error('Failed to toggle favorite');
       }
 
-      setItems(items.map(item => 
-        item.id === itemId 
+      setItems(items.map(item =>
+        item.id === itemId
           ? { ...item, isFavorite: !item.isFavorite }
           : item
       ));
@@ -243,8 +243,8 @@ export default function SaveSwapPage() {
 
     try {
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/chat', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -272,8 +272,8 @@ export default function SaveSwapPage() {
   const fetchSwapRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-requests', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-requests`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -294,7 +294,7 @@ export default function SaveSwapPage() {
   const handleAddItem = async () => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
         method: 'POST',
         headers: {
@@ -328,7 +328,7 @@ export default function SaveSwapPage() {
   const handleSwapRequest = async (itemId: string, offeredItemId: string) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-requests', {
         method: 'POST',
         headers: {
@@ -356,7 +356,7 @@ export default function SaveSwapPage() {
   const handleSwapResponse = async (requestId: string, accept: boolean) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-requests/${requestId}/${accept ? 'accept' : 'reject'}`, {
         method: 'POST',
         headers: {
@@ -379,8 +379,8 @@ export default function SaveSwapPage() {
 
   const filteredItems = items.filter((item) => {
     if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
-    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
-        !item.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !item.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filters.condition.length > 0 && !filters.condition.includes(item.condition)) return false;
     if (filters.location && !item.location.toLowerCase().includes(filters.location.toLowerCase())) return false;
     if (item.user.rating < filters.minRating) return false;
@@ -886,11 +886,10 @@ export default function SaveSwapPage() {
                         </>
                       )}
                       {request.status !== 'pending' && (
-                        <div className={`font-semibold ${
-                          request.status === 'accepted' ? 'text-green-500' :
-                          request.status === 'rejected' ? 'text-red-500' :
-                          'text-blue-500'
-                        }`}>
+                        <div className={`font-semibold ${request.status === 'accepted' ? 'text-green-500' :
+                            request.status === 'rejected' ? 'text-red-500' :
+                              'text-blue-500'
+                          }`}>
                           {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                         </div>
                       )}
@@ -932,11 +931,10 @@ export default function SaveSwapPage() {
                 className={`flex ${String(message.senderId) === String(user?.id) ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[70%] rounded-lg p-3 ${
-                    String(message.senderId) === String(user?.id)
+                  className={`max-w-[70%] rounded-lg p-3 ${String(message.senderId) === String(user?.id)
                       ? 'bg-blue-500 text-white'
                       : 'bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <div className="text-sm font-semibold mb-1">
                     {message.sender.name}

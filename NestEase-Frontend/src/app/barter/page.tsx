@@ -841,7 +841,7 @@ const BarterPage = () => {
           formData.append('image', file);
         }
 
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-swap', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-swap`, {
           method: 'POST',
           body: formData,
         });
@@ -1237,7 +1237,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localExchangeFormData.image);
 
-        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
+        const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
           method: 'POST',
           body: imageFormData,
           headers: {
@@ -1269,7 +1269,7 @@ const BarterPage = () => {
         console.log('Submitting exchange data:', exchangeData);
 
         // Submit to the exchange_product table
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/exchange/add-exchange', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exchange/add-exchange`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1449,8 +1449,8 @@ const BarterPage = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${isInCart(selectedItem.id)
-                          ? 'bg-green-600 hover:bg-green-700'
-                          : 'bg-primary hover:bg-primary/90'
+                        ? 'bg-green-600 hover:bg-green-700'
+                        : 'bg-primary hover:bg-primary/90'
                         }`}
                       onClick={() => {
                         if (!user) {
@@ -1672,7 +1672,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
 
-        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
+        const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
           method: 'POST',
           body: imageFormData,
         });
@@ -1990,7 +1990,7 @@ const BarterPage = () => {
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
 
-        const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
+        const imageResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
           method: 'POST',
           body: imageFormData,
         });
@@ -2317,7 +2317,7 @@ const BarterPage = () => {
           return;
         }
 
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/current-user', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/current-user`, {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
@@ -2467,15 +2467,15 @@ const BarterPage = () => {
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
                       className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all duration-300 ${selectedCategory === category.id
-                          ? 'bg-blue-600 text-white shadow-lg scale-105'
-                          : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        ? 'bg-blue-600 text-white shadow-lg scale-105'
+                        : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <div className={`p-3 rounded-lg mb-2 ${selectedCategory === category.id
-                          ? 'bg-white text-blue-600'
-                          : 'bg-blue-100 text-blue-600'
+                        ? 'bg-white text-blue-600'
+                        : 'bg-blue-100 text-blue-600'
                         }`}>
                         <Icon className="h-6 w-6" />
                       </div>
@@ -2566,8 +2566,8 @@ const BarterPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedPriceRange === range.id
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-background hover:bg-accent text-foreground'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-background hover:bg-accent text-foreground'
                     }`}
                 >
                   {range.name}
@@ -2685,8 +2685,8 @@ const BarterPage = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className={`flex-1 px-4 py-2 text-primary-foreground text-sm rounded-md transition-colors ${itemInCart
-                                ? 'bg-green-600 hover:bg-green-700'
-                                : 'bg-blue-600 hover:bg-blue-700'
+                              ? 'bg-green-600 hover:bg-green-700'
+                              : 'bg-blue-600 hover:bg-blue-700'
                               }`}
                             onClick={() => {
                               if (!user) {
@@ -2799,8 +2799,8 @@ const BarterPage = () => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${itemInCart
-                                    ? 'bg-green-600 hover:bg-green-700'
-                                    : 'bg-primary hover:bg-primary/90'
+                                  ? 'bg-green-600 hover:bg-green-700'
+                                  : 'bg-primary hover:bg-primary/90'
                                   }`}
                                 onClick={() => {
                                   if (!user) {

@@ -38,8 +38,8 @@ export default function ManageItemsPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items/my-items', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/my-items`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,7 +64,7 @@ export default function ManageItemsPage() {
 
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items/${itemId}`, {
         method: 'DELETE',
         headers: {
@@ -133,11 +133,10 @@ export default function ManageItemsPage() {
                     <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                       <span>Location: {item.location}</span>
                       <span className="mx-2">•</span>
-                      <span className={`font-semibold ${
-                        item.status === 'available' ? 'text-green-500' :
-                        item.status === 'pending' ? 'text-yellow-500' :
-                        'text-blue-500'
-                      }`}>
+                      <span className={`font-semibold ${item.status === 'available' ? 'text-green-500' :
+                          item.status === 'pending' ? 'text-yellow-500' :
+                            'text-blue-500'
+                        }`}>
                         {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                       </span>
                     </div>

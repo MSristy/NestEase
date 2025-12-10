@@ -185,7 +185,7 @@ export default function ProfilePage() {
           if (!token) {
             throw new Error('No authentication token found');
           }
-          const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/user-notifications', {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/user-notifications`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -251,20 +251,20 @@ export default function ProfilePage() {
         return;
       }
 
-    const formDataObj = new FormData();
-    formDataObj.append('avatar', file);
+      const formDataObj = new FormData();
+      formDataObj.append('avatar', file);
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile/avatar', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile/avatar`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formDataObj,
       });
       if (!response.ok) throw new Error('Failed to upload avatar');
       const updatedUser = await response.json();
-      
+
       // Update the user state in the auth context
       updateUser(updatedUser);
-      
+
       // Update local form data to reflect changes immediately
       setFormData({
         name: updatedUser.name || '',
@@ -296,7 +296,7 @@ export default function ProfilePage() {
         return;
       }
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -321,10 +321,10 @@ export default function ProfilePage() {
       }
 
       const updatedUser = await response.json();
-      
+
       // Update the user state in the auth context
       updateUser(updatedUser);
-      
+
       // Update local form data to reflect changes immediately
       setFormData({
         name: updatedUser.name || '',
@@ -333,18 +333,18 @@ export default function ProfilePage() {
         address: updatedUser.address || '',
         avatar: updatedUser.avatar || '',
       });
-      
+
       setSaveStatus('saved');
       setIsEditing(false);
       toast.success('Profile updated successfully');
-      
+
       // Reset save status after showing success
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
       console.error('Error updating profile:', error);
       setSaveStatus('error');
       toast.error('Failed to update profile');
-      
+
       // Reset save status after showing error
       setTimeout(() => setSaveStatus('idle'), 2000);
     } finally {
@@ -372,9 +372,9 @@ export default function ProfilePage() {
         throw new Error('Failed to accept exchange offer');
       }
 
-      setExchangeProducts(prev => 
-        prev.map(product => 
-          product.id === productId 
+      setExchangeProducts(prev =>
+        prev.map(product =>
+          product.id === productId
             ? { ...product, status: 'accepted' }
             : product
         )
@@ -409,9 +409,9 @@ export default function ProfilePage() {
         throw new Error('Failed to decline exchange offer');
       }
 
-      setExchangeProducts(prev => 
-        prev.map(product => 
-          product.id === productId 
+      setExchangeProducts(prev =>
+        prev.map(product =>
+          product.id === productId
             ? { ...product, status: 'declined' }
             : product
         )
@@ -439,7 +439,7 @@ export default function ProfilePage() {
     setPasswordLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/change-password', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -474,7 +474,7 @@ export default function ProfilePage() {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -551,7 +551,7 @@ export default function ProfilePage() {
         <h2 className="text-3xl font-extrabold mb-6 text-blue-700 text-center tracking-tight drop-shadow">Service Bookings & Approvals</h2>
         {loading ? (
           <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : bookings.length === 0 ? (
           <div className="text-center py-12">
@@ -634,7 +634,7 @@ export default function ProfilePage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-card text-card-foreground rounded-lg shadow-lg p-6 w-full max-w-md border">
               <h3 className="text-xl font-semibold mb-4">Reject Booking</h3>
-              
+
               <div className="bg-muted/50 p-4 rounded-lg mb-4">
                 <h4 className="font-medium mb-2 text-sm">Booking Details</h4>
                 <div className="text-sm space-y-1 text-muted-foreground">
@@ -644,7 +644,7 @@ export default function ProfilePage() {
                   <p><strong>Address:</strong> {selectedBooking.address}</p>
                 </div>
               </div>
-              
+
               <Label htmlFor="rejectionReason" className="text-sm font-medium">Reason for Rejection</Label>
               <Textarea
                 id="rejectionReason"
@@ -655,14 +655,14 @@ export default function ProfilePage() {
                 rows={4}
               />
               <div className="flex justify-end gap-2">
-                <Button 
-                  onClick={() => setShowRejectDialog(false)} 
+                <Button
+                  onClick={() => setShowRejectDialog(false)}
                   variant="outline"
                 >
                   Cancel
                 </Button>
-                <Button 
-                  onClick={handleRejectBooking} 
+                <Button
+                  onClick={handleRejectBooking}
                   variant="destructive"
                   disabled={!rejectionReason.trim()}
                 >
@@ -688,7 +688,7 @@ export default function ProfilePage() {
       setLoading(true);
       setError('');
       const token = localStorage.getItem('token');
-      fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases', {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => {
@@ -815,7 +815,7 @@ export default function ProfilePage() {
           try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch purchases');
@@ -842,7 +842,7 @@ export default function ProfilePage() {
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🏠</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Property Purchases Yet</h3>
-            <Button 
+            <Button
               className="mt-4"
               onClick={() => router.push('/property')}
             >
@@ -901,10 +901,10 @@ export default function ProfilePage() {
       if (user?.id && user.role?.toLowerCase() === 'landlord') {
         const fetchPendingRequests = async () => {
           try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests', {
-        headers: { Authorization: `Bearer ${token}` },
+            setLoading(true);
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests`, {
+              headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch pending requests');
             const data = await response.json();
@@ -913,9 +913,9 @@ export default function ProfilePage() {
             setError('Failed to load pending requests');
             toast.error('Failed to load pending requests');
           } finally {
-          setLoading(false);
+            setLoading(false);
           }
-    };
+        };
         fetchPendingRequests();
       }
     }, [user?.id, user?.role]);
@@ -923,18 +923,18 @@ export default function ProfilePage() {
     const handleApprove = async (requestId) => {
       setActionLoading(requestId);
       try {
-      const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${requestId}/approve`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Failed to approve request');
-        
+
         toast.success('Request approved successfully');
-        
+
         // Update the local state to show the approved status
-        setRequests(prev => prev.map(req => 
-          req.id === requestId 
+        setRequests(prev => prev.map(req =>
+          req.id === requestId
             ? { ...req, status: 'CONFIRMED' }
             : req
         ));
@@ -950,29 +950,29 @@ export default function ProfilePage() {
         toast.error('Please provide a reason for rejection');
         return;
       }
-      
+
       setActionLoading(requestId);
       try {
-      const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${requestId}/reject`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}` 
+            Authorization: `Bearer ${token}`
           },
           body: JSON.stringify({ reason: rejectionReason }),
         });
         if (!response.ok) throw new Error('Failed to reject request');
-        
+
         toast.success('Request rejected successfully');
-        
+
         // Update the local state to show the rejected status
-        setRequests(prev => prev.map(req => 
-          req.id === requestId 
+        setRequests(prev => prev.map(req =>
+          req.id === requestId
             ? { ...req, status: 'REJECTED', rejectionReason }
             : req
         ));
-        
+
         setShowRejectDialog(false);
         setRejectionReason('');
         setSelectedRequest(null);
@@ -1000,7 +1000,7 @@ export default function ProfilePage() {
 
     if (!user || user.role?.toLowerCase() !== 'landlord') return null;
 
-  return (
+    return (
       <div className="mt-12">
         <h2 className="text-3xl font-extrabold mb-6 text-green-700 text-center tracking-tight drop-shadow">Landlord Bookings & Approvals</h2>
         <div className="rounded-xl shadow p-6 mb-8 bg-inherit">
@@ -1018,7 +1018,7 @@ export default function ProfilePage() {
                 <Card key={req.id} className="mb-2">
                   <CardHeader>
                     <div className="flex justify-between items-start">
-                    <CardTitle>{req.property?.title || 'Property'}</CardTitle>
+                      <CardTitle>{req.property?.title || 'Property'}</CardTitle>
                       {getStatusBadge(req.status)}
                     </div>
                   </CardHeader>
@@ -1044,18 +1044,18 @@ export default function ProfilePage() {
                     <div className="text-gray-700 text-sm mb-1">
                       <strong>Requested:</strong> {new Date(req.createdAt).toLocaleDateString()}
                     </div>
-                    
+
                     {req.rejectionReason && (
                       <div className="text-sm text-red-600 mt-2 p-2 bg-red-50 rounded">
                         <strong>Rejection Reason:</strong> {req.rejectionReason}
                       </div>
                     )}
-                    
+
                     {req.status === 'PENDING' && (
                       <div className="flex gap-2 pt-4">
-                        <Button 
-                          onClick={() => handleApprove(req.id)} 
-                          disabled={actionLoading === req.id} 
+                        <Button
+                          onClick={() => handleApprove(req.id)}
+                          disabled={actionLoading === req.id}
                           className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                         >
                           {actionLoading === req.id ? (
@@ -1066,17 +1066,17 @@ export default function ProfilePage() {
                           ) : (
                             <>
                               <FaCheck className="mr-2" />
-                          Approve
+                              Approve
                             </>
                           )}
                         </Button>
-                        <Button 
+                        <Button
                           onClick={() => {
                             setSelectedRequest(req);
                             setShowRejectDialog(true);
-                          }} 
-                          disabled={actionLoading === req.id} 
-                          variant="destructive" 
+                          }}
+                          disabled={actionLoading === req.id}
+                          variant="destructive"
                           className="flex-1"
                         >
                           <FaTimes className="mr-2" />
@@ -1084,13 +1084,13 @@ export default function ProfilePage() {
                         </Button>
                       </div>
                     )}
-                    
+
                     {req.status === 'CONFIRMED' && (
                       <div className="text-sm text-green-600 mt-2 p-2 bg-green-50 rounded">
                         ✅ Booking approved - waiting for tenant payment
                       </div>
                     )}
-                    
+
                     {req.status === 'REJECTED' && (
                       <div className="text-sm text-red-600 mt-2 p-2 bg-red-50 rounded">
                         ❌ Booking rejected
@@ -1118,7 +1118,7 @@ export default function ProfilePage() {
                   <p><span className="font-medium">Amount:</span> ৳{selectedRequest?.totalPrice}</p>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="rejectionReason">Reason for Rejection *</Label>
                 <Textarea
@@ -1129,7 +1129,7 @@ export default function ProfilePage() {
                   rows={3}
                 />
               </div>
-              
+
               <div className="flex gap-2">
                 <Button
                   onClick={() => handleReject(selectedRequest?.id)}
@@ -1260,9 +1260,9 @@ export default function ProfilePage() {
                 <CardContent>
                   {product.images && (
                     <div className="mb-2">
-                      <img 
-                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.images}`} 
-                        alt={product.productName} 
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.images}`}
+                        alt={product.productName}
                         className="w-full h-40 object-cover rounded mb-2"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
@@ -1276,21 +1276,21 @@ export default function ProfilePage() {
                   <div className="text-gray-800 dark:text-neutral-100 text-sm mb-1">Status: {product.status || 'pending'}</div>
                   {product.status && product.status.toLowerCase() === 'pending' && (
                     <div className="flex gap-2 pt-4">
-          <Button
-                        onClick={() => handleAccept(product.id)} 
-                        disabled={isProcessing === product.id} 
+                      <Button
+                        onClick={() => handleAccept(product.id)}
+                        disabled={isProcessing === product.id}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                       >
                         Approve
                       </Button>
-                      <Button 
-                        onClick={() => handleDecline(product.id)} 
-                        disabled={isProcessing === product.id} 
+                      <Button
+                        onClick={() => handleDecline(product.id)}
+                        disabled={isProcessing === product.id}
                         className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                       >
                         Reject
-          </Button>
-        </div>
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -1304,7 +1304,7 @@ export default function ProfilePage() {
   // --- Interview Notifications Section ---
   function InterviewNotificationsSection({ notifications }) {
     const interviewNotifications = notifications.filter(n => n.type === 'interview');
-    
+
     if (interviewNotifications.length === 0) {
       return null;
     }
@@ -1330,7 +1330,7 @@ export default function ProfilePage() {
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
                   {notification.message}
                 </p>
-                
+
                 {notification.metadata && (
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border">
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Interview Details:</h4>
@@ -1417,7 +1417,7 @@ export default function ProfilePage() {
           try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -1440,11 +1440,11 @@ export default function ProfilePage() {
 
     const processPayment = async () => {
       if (!selectedBooking) return;
-      
+
       setProcessingPayment(true);
       try {
         const token = localStorage.getItem('token');
-        
+
         if (paymentMethod === 'online') {
           // Add to cart and redirect to checkout
           const cartItem = {
@@ -1456,19 +1456,19 @@ export default function ProfilePage() {
             image: selectedBooking.property.images?.[0] || '/images/placeholder.jpg',
             propertyBooking: selectedBooking
           };
-          
+
           // Add to cart context
           addToCart(cartItem);
-          
+
           // Close payment dialog
           setShowPaymentDialog(false);
           setSelectedBooking(null);
-          
+
           // Redirect to checkout
           router.push('/checkout');
           return;
         }
-        
+
         // For cash payment, process directly
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${selectedBooking.id}/payment`, {
           method: 'POST',
@@ -1485,20 +1485,20 @@ export default function ProfilePage() {
 
         const result = await response.json();
         console.log('Payment result:', result);
-        
+
         toast.success('Payment processed successfully!');
         setShowPaymentDialog(false);
         setSelectedBooking(null);
-        
+
         // Refresh bookings
-        const refreshResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
+        const refreshResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (refreshResponse.ok) {
           const updatedBookings = await refreshResponse.json();
           setBookings(updatedBookings);
         }
-        
+
       } catch (error) {
         toast.error('Payment failed. Please try again.');
         console.error('Payment error:', error);
@@ -1536,7 +1536,7 @@ export default function ProfilePage() {
             <div className="text-gray-400 text-6xl mb-4">🏠</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Property Bookings Yet</h3>
             <p className="text-gray-600">You haven't made any property bookings yet.</p>
-            <Button 
+            <Button
               className="mt-4"
               onClick={() => router.push('/property')}
             >
@@ -1576,13 +1576,13 @@ export default function ProfilePage() {
                       <span>Owner: {booking.property.owner?.name}</span>
                     </div>
                   </div>
-                  
+
                   {booking.rejectionReason && (
                     <div className="text-sm text-red-600">
                       <strong>Rejection Reason:</strong> {booking.rejectionReason}
                     </div>
                   )}
-                  
+
                   {booking.status === 'CONFIRMED' && booking.paymentStatus === 'PENDING' && (
                     <Button
                       onClick={() => handlePayment(booking)}
@@ -1592,7 +1592,7 @@ export default function ProfilePage() {
                       Proceed to Payment
                     </Button>
                   )}
-                  
+
                   {booking.paymentStatus === 'PAID' && (
                     <div className="text-sm text-green-600 font-semibold">
                       ✅ Payment Completed
@@ -1618,7 +1618,7 @@ export default function ProfilePage() {
                   <p><span className="font-medium">Total Amount:</span> ৳{selectedBooking?.totalPrice}</p>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label>Payment Method</Label>
                 <div className="space-y-2">
@@ -1644,7 +1644,7 @@ export default function ProfilePage() {
                   </label>
                 </div>
               </div>
-              
+
               <div className="flex gap-2">
                 <Button
                   onClick={processPayment}
@@ -1714,28 +1714,28 @@ export default function ProfilePage() {
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
             {/* Avatar Section */}
             <div className="flex flex-col items-center">
-          <div 
+              <div
                 className={`relative cursor-pointer group ${isEditing ? 'hover:opacity-80' : ''}`}
-            onClick={handleAvatarClick}
-          >
+                onClick={handleAvatarClick}
+              >
                 <Avatar className="w-32 h-32 mb-4 ring-4 ring-white dark:ring-gray-800 shadow-lg">
-              <AvatarImage src={formData.avatar} alt={formData.name} />
+                  <AvatarImage src={formData.avatar} alt={formData.name} />
                   <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                     {formData.name?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
-            </Avatar>
-            {isEditing && (
+                </Avatar>
+                {isEditing && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="text-white text-sm font-medium">Change Photo</span>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          {isUploading && (
+              {isUploading && (
                 <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
                   <FaSpinner className="animate-spin" />
                   Uploading...
                 </div>
-          )}
+              )}
             </div>
 
             {/* Profile Info Section */}
@@ -1787,11 +1787,11 @@ export default function ProfilePage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-          <Button
-            variant={isEditing ? "outline" : "default"}
+                <Button
+                  variant={isEditing ? "outline" : "default"}
                   className="min-w-[140px]"
-            onClick={() => setIsEditing(!isEditing)}
-          >
+                  onClick={() => setIsEditing(!isEditing)}
+                >
                   {isEditing ? (
                     <>
                       <FaTimes className="mr-2" />
@@ -1803,7 +1803,7 @@ export default function ProfilePage() {
                       Edit Profile
                     </>
                   )}
-          </Button>
+                </Button>
 
                 {/* Change Password Button and Modal */}
                 <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
@@ -1880,14 +1880,14 @@ export default function ProfilePage() {
                     Saving...
                   </div>
                 )}
-                
+
                 {saveStatus === 'saved' && (
                   <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
                     <FaCheck />
                     Saved!
                   </div>
                 )}
-                
+
                 {saveStatus === 'error' && (
                   <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
                     <FaTimes />
@@ -1900,7 +1900,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Edit Form - Enhanced Design */}
-          {isEditing && (
+        {isEditing && (
           <Card className="mb-8 shadow-lg border-0 bg-card">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
               <CardTitle className="text-2xl font-bold text-center text-foreground">
@@ -1911,70 +1911,70 @@ export default function ProfilePage() {
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
+                  <div className="space-y-2">
                     <Label htmlFor="name" className="text-sm font-medium text-foreground">
                       Full Name *
                     </Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
                       placeholder="Enter your full name"
                       className="h-12"
-            />
-          </div>
-                  
-          <div className="space-y-2">
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium text-foreground">
                       Email Address
                     </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              disabled
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      disabled
                       className="h-12 bg-muted"
-            />
+                    />
                     <p className="text-xs text-muted-foreground">Email cannot be changed</p>
-          </div>
-                  
-          <div className="space-y-2">
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="phone" className="text-sm font-medium text-foreground">
                       Phone Number
                     </Label>
-            <Input
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
+                    <Input
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="+880 1XXX XXXXXX"
                       className="h-12"
-            />
-          </div>
-                  
-          <div className="space-y-2">
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="address" className="text-sm font-medium text-foreground">
                       Address
                     </Label>
-            <Input
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
+                    <Input
+                      id="address"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
                       placeholder="Enter your address"
                       className="h-12"
-            />
-          </div>
+                    />
+                  </div>
                 </div>
-                
+
                 <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
+                  <Button
+                    type="submit"
                     className="flex-1 h-12 bg-blue-600 hover:bg-blue-700"
-              disabled={isLoading}
-            >
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <>
                         <FaSpinner className="animate-spin mr-2" />
@@ -1986,8 +1986,8 @@ export default function ProfilePage() {
                         Save Changes
                       </>
                     )}
-            </Button>
-                  
+                  </Button>
+
                   <Button
                     type="button"
                     variant="outline"
@@ -1997,10 +1997,10 @@ export default function ProfilePage() {
                     Cancel
                   </Button>
                 </div>
-        </form>
+              </form>
             </CardContent>
           </Card>
-          )}
+        )}
 
         {/* Interview Notifications Section */}
         <InterviewNotificationsSection notifications={notifications} />
@@ -2028,7 +2028,7 @@ export default function ProfilePage() {
 
         {/* Tenant Bookings Section */}
         {user && user.role?.toLowerCase() === 'buyer' && <BuyerPurchasesSection user={user} />}
-                    </div>
+      </div>
     </div>
   );
 } 

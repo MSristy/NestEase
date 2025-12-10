@@ -12,15 +12,15 @@ import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  User, 
-  Bell, 
-  Lock, 
-  Shield, 
-  Mail, 
-  Phone, 
-  Palette, 
-  MapPin, 
+import {
+  User,
+  Bell,
+  Lock,
+  Shield,
+  Mail,
+  Phone,
+  Palette,
+  MapPin,
   Trash2,
   Link as LinkIcon,
   Plus,
@@ -104,7 +104,7 @@ export default function SettingsPage() {
     if (!token) return;
 
     // Fetch profile
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -115,7 +115,7 @@ export default function SettingsPage() {
       });
 
     // Fetch notifications
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -125,7 +125,7 @@ export default function SettingsPage() {
       });
 
     // Fetch privacy
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/privacy', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/privacy`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -136,7 +136,7 @@ export default function SettingsPage() {
     // Fetch addresses
     setIsLoadingAddresses(true);
     setAddressError(null);
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {
@@ -161,7 +161,7 @@ export default function SettingsPage() {
       });
 
     // Fetch connected accounts
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/users/connected-accounts', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/connected-accounts`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -173,7 +173,7 @@ export default function SettingsPage() {
     setIsUpdatingProfile(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ export default function SettingsPage() {
     setIsChangingPassword(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/change-password', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ export default function SettingsPage() {
     setIsSavingNotifications(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/notifications', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/notifications`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ export default function SettingsPage() {
     setIsSavingPrivacy(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/privacy', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/privacy`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ export default function SettingsPage() {
     setIsDeleting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -325,7 +325,7 @@ export default function SettingsPage() {
     setIsAddingAddress(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -399,7 +399,7 @@ export default function SettingsPage() {
   const handleSaveCustomization = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('${process.env.NEXT_PUBLIC_API_URL}/users/customization', {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/customization`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -420,7 +420,7 @@ export default function SettingsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Settings</h1>
-      
+
       <Tabs defaultValue="profile" className="max-w-4xl mx-auto">
         <TabsList className="grid w-full grid-cols-6 mb-8">
           <TabsTrigger value="profile" className="flex items-center gap-2">
@@ -633,8 +633,8 @@ export default function SettingsPage() {
               ) : addressError ? (
                 <div className="text-center py-4 text-red-500">
                   <p>{addressError}</p>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="mt-2"
                     onClick={() => {
                       setAddressError(null);
@@ -642,7 +642,7 @@ export default function SettingsPage() {
                       const token = localStorage.getItem('token');
                       if (token) {
                         setIsLoadingAddresses(true);
-                        fetch('${process.env.NEXT_PUBLIC_API_URL}/users/addresses', {
+                        fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses`, {
                           headers: { Authorization: `Bearer ${token}` },
                         })
                           .then(res => res.json())

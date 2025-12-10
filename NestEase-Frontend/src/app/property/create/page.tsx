@@ -99,7 +99,7 @@ export default function CreatePropertyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!user) {
       toast.error('Please log in to list a property');
       router.push('/auth/login');
@@ -114,12 +114,12 @@ export default function CreatePropertyPage() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const squareFeetValue = parseInt(formData.squareFeet, 10);
-      
+
       // Use correct endpoint based on role
       const endpoint = user.role === 'LANDLORD' ? 'rent' : 'sale';
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${endpoint}` , {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export default function CreatePropertyPage() {
       }
 
       const data = await response.json();
-      
+
       toast.success('Property listed successfully! You can view it in your listings.', {
         duration: 5000,
         position: 'top-center',
@@ -162,7 +162,7 @@ export default function CreatePropertyPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    
+
     if (name === 'squareFeet') {
       const intValue = parseInt(value, 10);
       if (!isNaN(intValue)) {
@@ -196,7 +196,7 @@ export default function CreatePropertyPage() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/upload', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -453,7 +453,7 @@ export default function CreatePropertyPage() {
                 required
               />
               <p className="text-sm text-gray-600">You can select multiple images at once. Upload at least one image.</p>
-              
+
               {formData.images.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                   {formData.images.map((image, index) => (

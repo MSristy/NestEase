@@ -50,8 +50,8 @@ export default function ServiceProviderDashboard() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/my-bookings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +74,7 @@ export default function ServiceProviderDashboard() {
   const handleApproveBooking = async (bookingId: number) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${bookingId}/approve`, {
         method: 'POST',
         headers: {
@@ -102,7 +102,7 @@ export default function ServiceProviderDashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings/${selectedBooking.id}/reject`, {
         method: 'POST',
         headers: {
@@ -269,7 +269,7 @@ export default function ServiceProviderDashboard() {
                 </div>
               )}
             </div>
-            
+
             <div>
               <Label htmlFor="rejectionReason" className="text-sm font-medium">Reason for Rejection</Label>
               <Textarea
@@ -281,7 +281,7 @@ export default function ServiceProviderDashboard() {
                 className="mt-2 bg-background text-foreground border-border focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
-            
+
             <div className="flex gap-3 pt-2">
               <Button
                 onClick={handleRejectBooking}
