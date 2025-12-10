@@ -11,31 +11,31 @@ export function cn(...inputs: ClassValue[]) {
  * @param baseUrl - The base URL for the backend (default: process.env.NEXT_PUBLIC_API_URL)
  * @returns The complete image URL
  */
-export function getImageUrl(imagePath: string, baseUrl: string = process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL}'): string {
+export function getImageUrl(imagePath: string, baseUrl: string = process.env.NEXT_PUBLIC_API_URL || ''): string {
   console.log('getImageUrl called with:', { imagePath, baseUrl });
-  
+
   if (!imagePath) {
     console.log('No image path provided, returning placeholder');
     return '/images/placeholder.jpg';
   }
-  
+
   // If it's already a full URL, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     console.log('Image path is already a full URL:', imagePath);
     return imagePath;
   }
-  
+
   // Remove any duplicate /uploads/properties/ if present
   const cleanPath = imagePath.replace(/\/uploads\/properties\/uploads\/properties\//, '/uploads/properties/');
   console.log('Cleaned path:', cleanPath);
-  
+
   // Ensure the path starts with /
   const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
   console.log('Normalized path:', normalizedPath);
-  
+
   const finalUrl = `${baseUrl}${normalizedPath}`;
   console.log('Final URL:', finalUrl);
-  
+
   return finalUrl;
 }
 

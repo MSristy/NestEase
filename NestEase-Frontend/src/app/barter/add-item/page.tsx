@@ -49,9 +49,9 @@ export default function AddItemPage() {
     try {
       setSaving(true);
       const token = localStorage.getItem('token');
-      
+
       // First, create the item
-      const itemResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
+      const itemResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export default function AddItemPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Add New Item</h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
             <CardContent className="p-6 space-y-6">

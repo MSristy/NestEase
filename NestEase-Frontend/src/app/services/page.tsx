@@ -195,7 +195,7 @@ export default function ServicesPage() {
     try {
       setLoading(true);
       
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers`, {
         // Remove Authorization header to make it public
       });
 
@@ -217,7 +217,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/favorites', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/favorites`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -244,7 +244,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/history', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/history`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -296,7 +296,7 @@ export default function ServicesPage() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/service-providers/bookings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

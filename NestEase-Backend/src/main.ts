@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Enable CORS with specific configuration
- 
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*', 
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
@@ -25,10 +25,10 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  
+
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  
+
   console.log(`Application is running on: ${await app.getUrl()}`);
   console.log(`Static files served from: ${join(process.cwd(), 'uploads')}`);
 }

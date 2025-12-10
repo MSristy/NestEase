@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/context/CartContext';
-import { barterItems } from '@/data/data'; 
+import { barterItems } from '@/data/data';
 
 // Add type definition for barter items
 interface BarterItem {
@@ -124,7 +124,7 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   house: FaHome,
   kitchen: FaUtensils,
   tools: FaTools,
-  
+
   // Buy categories
   electronics: FaLaptop,
   gaming: FaGamepad,
@@ -135,11 +135,11 @@ const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
   sports: FaBasketballBall,
   music: FaGuitar,
   fitness: FaDumbbell,
-  
+
   // Swap categories
   vehicles: FaCar,
   clothing: FaTshirt,
-  
+
   // Offer categories
   services: FaWrench,
   rentals: FaHome,
@@ -178,12 +178,12 @@ const getCategoryColor = (categoryId: string): string => {
     camera: 'purple',
     tv: 'fuchsia',
     headphones: 'pink',
-    
+
     // Vehicles
     car: 'red',
     bike: 'orange',
     motorcycle: 'amber',
-    
+
     // Home & Furniture
     furniture: 'yellow',
     house: 'lime',
@@ -191,18 +191,18 @@ const getCategoryColor = (categoryId: string): string => {
     bedroom: 'emerald',
     couch: 'teal',
     bed: 'cyan',
-    
+
     // Clothing & Fashion
     dress: 'sky',
     tshirt: 'blue',
-    
+
     // Sports & Entertainment
     sports: 'indigo',
     gaming: 'violet',
     music: 'purple',
     guitar: 'fuchsia',
     basketball: 'pink',
-    
+
     // Tools & Services
     tools: 'red',
     services: 'orange',
@@ -211,10 +211,10 @@ const getCategoryColor = (categoryId: string): string => {
     gardening: 'lime',
     cooking: 'green',
     transport: 'emerald',
-    
+
     // Books & Education
     books: 'teal',
-    
+
     // Others
     electronics: 'cyan',
     audio: 'sky',
@@ -299,7 +299,7 @@ const BarterPage = () => {
     const storedItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
     const sellItems = storedItems.filter((item: any) => !item.type || item.type === 'sell');
     const offerItems = storedItems.filter((item: any) => item.type === 'offer');
-    
+
     setSellCartCount(sellItems.length);
     setOfferCartCount(offerItems.length);
   }, []);
@@ -326,7 +326,7 @@ const BarterPage = () => {
         const matchesDescription = item.description.toLowerCase().includes(searchLower);
         const matchesCategory = item.category.toLowerCase().includes(searchLower);
         const matchesLocation = item.location.toLowerCase().includes(searchLower);
-        
+
         // If a category is selected, only show results from that category
         if (selectedCategory && item.category !== selectedCategory) {
           return false;
@@ -346,15 +346,15 @@ const BarterPage = () => {
   const fetchSwapItems = async (category?: string) => {
     try {
       setIsLoading(true);
-      const url = category 
+      const url = category
         ? `${process.env.NEXT_PUBLIC_API_URL}/add-swap?category=${category}`
-        : '${process.env.NEXT_PUBLIC_API_URL}/add-swap';
-      
+        : `${process.env.NEXT_PUBLIC_API_URL}/add-swap`;
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch swap items');
       }
-      
+
       const result = await response.json();
       if (result.success) {
         setDbItems(result.data);
@@ -371,15 +371,15 @@ const BarterPage = () => {
   const fetchSellProducts = async (category?: string) => {
     try {
       setIsLoading(true);
-      const url = category 
+      const url = category
         ? `${process.env.NEXT_PUBLIC_API_URL}/add-sell?category=${category}`
-        : '${process.env.NEXT_PUBLIC_API_URL}/add-sell';
-      
+        : `${process.env.NEXT_PUBLIC_API_URL}/add-sell`;
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch sell products');
       }
-      
+
       const result = await response.json();
       if (result.success) {
         setDbItems(result.data);
@@ -402,25 +402,25 @@ const BarterPage = () => {
   }, [selectedTransactionType, selectedCategory]);
 
   // Update the filtered items logic
-  const filteredItems = selectedTransactionType === 'swap' 
+  const filteredItems = selectedTransactionType === 'swap'
     ? dbItems.filter(item => {
-        const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
-        const matchesSearch = searchTerm 
-          ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.location.toLowerCase().includes(searchTerm.toLowerCase())
-          : true;
-        return matchesCategory && matchesSearch;
-      })
+      const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+      const matchesSearch = searchTerm
+        ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.location.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+      return matchesCategory && matchesSearch;
+    })
     : selectedTransactionType === 'sell'
-    ? dbItems.filter(item => {
+      ? dbItems.filter(item => {
         const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
         const selectedRange = priceRanges.find(range => range.id === selectedPriceRange);
         const matchesPriceRange = selectedPriceRange && selectedRange
           ? selectedRange.min <= item.price && item.price <= selectedRange.max
           : true;
-        const matchesSearch = searchTerm 
+        const matchesSearch = searchTerm
           ? (item.product_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -428,19 +428,19 @@ const BarterPage = () => {
           : true;
         return matchesCategory && matchesPriceRange && matchesSearch;
       })
-    : barterItems.filter(item => {
+      : barterItems.filter(item => {
         const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
         const selectedRange = priceRanges.find(range => range.id === selectedPriceRange);
         const matchesPriceRange = selectedPriceRange && selectedRange
           ? selectedRange.min <= item.price && item.price <= selectedRange.max
           : true;
-        const matchesSearch = searchTerm 
+        const matchesSearch = searchTerm
           ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.location.toLowerCase().includes(searchTerm.toLowerCase())
+          item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.location.toLowerCase().includes(searchTerm.toLowerCase())
           : true;
-        const matchesTransactionType = selectedTransactionType === 'swap' 
+        const matchesTransactionType = selectedTransactionType === 'swap'
           ? item.transactionType === 'swap'
           : item.transactionType !== 'swap';
         return matchesCategory && matchesPriceRange && matchesSearch && matchesTransactionType;
@@ -612,11 +612,11 @@ const BarterPage = () => {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submission started');
-    
+
     // Validate required fields
-    if (!formData.title || !formData.category || !formData.transactionType || 
-        !formData.price || !formData.condition || !formData.location || 
-        !formData.description || !formData.image) {
+    if (!formData.title || !formData.category || !formData.transactionType ||
+      !formData.price || !formData.condition || !formData.location ||
+      !formData.description || !formData.image) {
       console.log('Validation failed:', {
         title: !formData.title,
         category: !formData.category,
@@ -639,7 +639,7 @@ const BarterPage = () => {
       // Upload image first
       const imageFormData = new FormData();
       imageFormData.append('file', formData.image);
-      
+
       const imageResponse = await fetch('/api/upload', {
         method: 'POST',
         body: imageFormData,
@@ -713,7 +713,7 @@ const BarterPage = () => {
         email: ''
       });
       setShowAddYoursModal(false);
-      
+
       // Refresh the items list
       fetchItems();
     } catch (error) {
@@ -809,9 +809,9 @@ const BarterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      
-      if (!localFormData.ownerName || !localFormData.title || !localFormData.category || 
-          !localFormData.condition || !localFormData.location || !localFormData.description || !localFormData.image) {
+
+      if (!localFormData.ownerName || !localFormData.title || !localFormData.category ||
+        !localFormData.condition || !localFormData.location || !localFormData.description || !localFormData.image) {
         toast.error('Please fill in all required fields');
         return;
       }
@@ -826,7 +826,7 @@ const BarterPage = () => {
         formData.append('item_condition', localFormData.condition.trim());
         formData.append('location', localFormData.location.trim());
         formData.append('description', localFormData.description.trim());
-        
+
         if (localFormData.image) {
           const file = localFormData.image;
           const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -1215,16 +1215,16 @@ const BarterPage = () => {
     const handleExchangeSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       console.log('Form submission started with data:', localExchangeFormData);
-      
+
       if (!isAuthenticated()) {
         toast.error('Please log in to submit an exchange offer');
         return;
       }
 
       // Validate required fields
-      if (!localExchangeFormData.title || !localExchangeFormData.category || 
-          !localExchangeFormData.condition || !localExchangeFormData.location || 
-          !localExchangeFormData.description || !localExchangeFormData.image) {
+      if (!localExchangeFormData.title || !localExchangeFormData.category ||
+        !localExchangeFormData.condition || !localExchangeFormData.location ||
+        !localExchangeFormData.description || !localExchangeFormData.image) {
         toast.error('Please fill in all required fields');
         return;
       }
@@ -1236,7 +1236,7 @@ const BarterPage = () => {
         // First upload the image
         const imageFormData = new FormData();
         imageFormData.append('file', localExchangeFormData.image);
-        
+
         const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
@@ -1339,136 +1339,135 @@ const BarterPage = () => {
             </div>
 
             {!showExchangeForm ? (
-            <div className="space-y-6">
-              {/* Image */}
-              <div className="relative aspect-video rounded-lg overflow-hidden">
-                <img
-                  src={selectedItem?.imageUrl}
-                  alt={selectedItem?.title}
-                  className="object-cover w-full h-full"
-                />
-              </div>
+              <div className="space-y-6">
+                {/* Image */}
+                <div className="relative aspect-video rounded-lg overflow-hidden">
+                  <img
+                    src={selectedItem?.imageUrl}
+                    alt={selectedItem?.title}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
 
-              {/* Owner Information */}
-              <div className="bg-gray-800 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-white mb-3">Owner Information</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Name:</span>
-                    <span className="text-white">{selectedItem?.owner?.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Phone:</span>
-                    <span className="text-white">{selectedItem?.owner?.phone}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Email:</span>
-                    <span className="text-white">{selectedItem?.owner?.email}</span>
+                {/* Owner Information */}
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-white mb-3">Owner Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Name:</span>
+                      <span className="text-white">{selectedItem?.owner?.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Phone:</span>
+                      <span className="text-white">{selectedItem?.owner?.phone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Email:</span>
+                      <span className="text-white">{selectedItem?.owner?.email}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Item Details */}
-              <div className="space-y-4">
-                {selectedTransactionType === 'offer' && selectedItem?.discount > 0 ? (
-                  <div className="flex flex-col">
-                    <div className="flex justify-between items-center">
-                      <div className="text-gray-300">Original Price</div>
-                      <div className="text-gray-400 line-through">৳{selectedItem?.price}</div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="text-gray-300">Discounted Price</div>
-                      <div className="text-green-500 font-semibold text-xl">
-                        ৳{(selectedItem?.price - (selectedItem?.price * selectedItem?.discount / 100)).toFixed(2)}
+                {/* Item Details */}
+                <div className="space-y-4">
+                  {selectedTransactionType === 'offer' && selectedItem?.discount > 0 ? (
+                    <div className="flex flex-col">
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-300">Original Price</div>
+                        <div className="text-gray-400 line-through">৳{selectedItem?.price}</div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-300">Discounted Price</div>
+                        <div className="text-green-500 font-semibold text-xl">
+                          ৳{(selectedItem?.price - (selectedItem?.price * selectedItem?.discount / 100)).toFixed(2)}
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-300">Discount</div>
+                        <div className="text-red-500 font-semibold">-{selectedItem?.discount}%</div>
                       </div>
                     </div>
+                  ) : selectedTransactionType !== 'swap' && (
                     <div className="flex justify-between items-center">
-                      <div className="text-gray-300">Discount</div>
-                      <div className="text-red-500 font-semibold">-{selectedItem?.discount}%</div>
+                      <div className="text-gray-300">Price</div>
+                      <div className="text-green-500 font-semibold text-xl">৳{selectedItem?.price}</div>
                     </div>
-                  </div>
-                ) : selectedTransactionType !== 'swap' && (
+                  )}
+
                   <div className="flex justify-between items-center">
-                    <div className="text-gray-300">Price</div>
-                    <div className="text-green-500 font-semibold text-xl">৳{selectedItem?.price}</div>
+                    <div className="text-gray-300">Category</div>
+                    <div className="text-white font-medium capitalize">{selectedItem?.category}</div>
                   </div>
-                )}
 
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-300">Category</div>
-                  <div className="text-white font-medium capitalize">{selectedItem?.category}</div>
+                  <div className="flex justify-between items-center">
+                    <div className="text-gray-300">Condition</div>
+                    <div className="text-white font-medium capitalize">{selectedItem?.condition}</div>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div className="text-gray-300">Location</div>
+                    <div className="text-white font-medium">{selectedItem?.location}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-gray-300 mb-2">Description</div>
+                    <div className="text-white whitespace-pre-wrap">{selectedItem?.description}</div>
+                  </div>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-300">Condition</div>
-                  <div className="text-white font-medium capitalize">{selectedItem?.condition}</div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-300">Location</div>
-                  <div className="text-white font-medium">{selectedItem?.location}</div>
-                </div>
-
-                <div>
-                  <div className="text-gray-300 mb-2">Description</div>
-                  <div className="text-white whitespace-pre-wrap">{selectedItem?.description}</div>
+                <div className="flex justify-end space-x-4 mt-6">
+                  <button
+                    onClick={() => {
+                      setShowOfferModal(false);
+                      setSelectedItem(null);
+                    }}
+                    className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600"
+                  >
+                    Close
+                  </button>
+                  {selectedTransactionType === 'swap' && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        if (!user) {
+                          // Store the current path as the intended destination
+                          localStorage.setItem('intendedDestination', '/barter');
+                          // Redirect to login page
+                          router.push('/auth/login');
+                          return;
+                        }
+                        setShowExchangeForm(true);
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      Exchange your product
+                    </motion.button>
+                  )}
+                  {(selectedTransactionType === 'sell' || selectedTransactionType === 'offer') && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${isInCart(selectedItem.id)
+                          ? 'bg-green-600 hover:bg-green-700'
+                          : 'bg-primary hover:bg-primary/90'
+                        }`}
+                      onClick={() => {
+                        if (!user) {
+                          // Store the current path as the intended destination
+                          localStorage.setItem('intendedDestination', '/barter');
+                          // Redirect to login page
+                          router.push('/auth/login');
+                          return;
+                        }
+                        handleAddToCart(selectedItem);
+                      }}
+                    >
+                      {isInCart(selectedItem.id) ? 'Remove from Cart' : 'Add to Cart'}
+                    </motion.button>
+                  )}
                 </div>
               </div>
-
-              <div className="flex justify-end space-x-4 mt-6">
-                <button
-                  onClick={() => {
-                    setShowOfferModal(false);
-                    setSelectedItem(null);
-                  }}
-                  className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600"
-                >
-                  Close
-                </button>
-                {selectedTransactionType === 'swap' && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      if (!user) {
-                        // Store the current path as the intended destination
-                        localStorage.setItem('intendedDestination', '/barter');
-                        // Redirect to login page
-                        router.push('/auth/login');
-                        return;
-                      }
-                      setShowExchangeForm(true);
-                    }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                  >
-                    Exchange your product
-                  </motion.button>
-                )}
-                {(selectedTransactionType === 'sell' || selectedTransactionType === 'offer') && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${
-                      isInCart(selectedItem.id)
-                        ? 'bg-green-600 hover:bg-green-700' 
-                        : 'bg-primary hover:bg-primary/90'
-                    }`}
-                    onClick={() => {
-                      if (!user) {
-                        // Store the current path as the intended destination
-                        localStorage.setItem('intendedDestination', '/barter');
-                        // Redirect to login page
-                        router.push('/auth/login');
-                        return;
-                      }
-                      handleAddToCart(selectedItem);
-                    }}
-                  >
-                    {isInCart(selectedItem.id) ? 'Remove from Cart' : 'Add to Cart'}
-                  </motion.button>
-                )}
-              </div>
-            </div>
             ) : (
               <form onSubmit={handleExchangeSubmit} className="space-y-6">
                 <div>
@@ -1659,11 +1658,11 @@ const BarterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      
-      if (!localFormData.ownerName || !localFormData.title || !localFormData.category || 
-          !localFormData.condition || !localFormData.location || !localFormData.description || 
-          !localFormData.image || !localFormData.price || !localFormData.phoneNumber || 
-          !localFormData.email) {
+
+      if (!localFormData.ownerName || !localFormData.title || !localFormData.category ||
+        !localFormData.condition || !localFormData.location || !localFormData.description ||
+        !localFormData.image || !localFormData.price || !localFormData.phoneNumber ||
+        !localFormData.email) {
         toast.error('Please fill in all required fields');
         return;
       }
@@ -1672,7 +1671,7 @@ const BarterPage = () => {
         // First upload the image
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
-        
+
         const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
@@ -1700,7 +1699,7 @@ const BarterPage = () => {
         };
 
         // Submit to the sell_product table
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-sell', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-sell`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1730,7 +1729,7 @@ const BarterPage = () => {
             phoneNumber: '',
             email: ''
           });
-          
+
           // Refresh the items list
           if (selectedTransactionType === 'sell') {
             fetchSellProducts();
@@ -1977,11 +1976,11 @@ const BarterPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      
-      if (!localFormData.ownerName || !localFormData.title || !localFormData.category || 
-          !localFormData.condition || !localFormData.location || !localFormData.description || 
-          !localFormData.image || !localFormData.price || !localFormData.phoneNumber || 
-          !localFormData.email) {
+
+      if (!localFormData.ownerName || !localFormData.title || !localFormData.category ||
+        !localFormData.condition || !localFormData.location || !localFormData.description ||
+        !localFormData.image || !localFormData.price || !localFormData.phoneNumber ||
+        !localFormData.email) {
         toast.error('Please fill in all required fields');
         return;
       }
@@ -1990,7 +1989,7 @@ const BarterPage = () => {
         // First upload the image
         const imageFormData = new FormData();
         imageFormData.append('file', localFormData.image);
-        
+
         const imageResponse = await fetch('${process.env.NEXT_PUBLIC_API_URL}/upload', {
           method: 'POST',
           body: imageFormData,
@@ -2019,7 +2018,7 @@ const BarterPage = () => {
         };
 
         // Submit to the item_offer table
-        const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-offer', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-offer`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2050,7 +2049,7 @@ const BarterPage = () => {
             phoneNumber: '',
             email: ''
           });
-          
+
           // Refresh the items list if needed
           if (selectedTransactionType === 'offer') {
             fetchOffers();
@@ -2285,11 +2284,11 @@ const BarterPage = () => {
   const fetchOffers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/add-offer');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-offer`);
       if (!response.ok) {
         throw new Error('Failed to fetch offers');
       }
-      
+
       const result = await response.json();
       if (result.success) {
         setOffers(result.data);
@@ -2325,7 +2324,7 @@ const BarterPage = () => {
             'Authorization': `Bearer ${token}`
           },
         });
-        
+
         if (response.ok) {
           const result = await response.json();
           if (result.success) {
@@ -2467,19 +2466,17 @@ const BarterPage = () => {
                     <motion.button
                       key={category.id}
                       onClick={() => setSelectedCategory(category.id)}
-                      className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                        selectedCategory === category.id 
-                          ? 'bg-blue-600 text-white shadow-lg scale-105' 
+                      className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer transition-all duration-300 ${selectedCategory === category.id
+                          ? 'bg-blue-600 text-white shadow-lg scale-105'
                           : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
-                      }`}
+                        }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div className={`p-3 rounded-lg mb-2 ${
-                        selectedCategory === category.id 
-                          ? 'bg-white text-blue-600' 
+                      <div className={`p-3 rounded-lg mb-2 ${selectedCategory === category.id
+                          ? 'bg-white text-blue-600'
                           : 'bg-blue-100 text-blue-600'
-                      }`}>
+                        }`}>
                         <Icon className="h-6 w-6" />
                       </div>
                       <span className="text-sm font-medium">{category.name}</span>
@@ -2568,11 +2565,10 @@ const BarterPage = () => {
                   onClick={() => setSelectedPriceRange(range.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                    selectedPriceRange === range.id
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${selectedPriceRange === range.id
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-background hover:bg-accent text-foreground'
-                  }`}
+                    }`}
                 >
                   {range.name}
                 </motion.button>
@@ -2589,10 +2585,10 @@ const BarterPage = () => {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-foreground">
-              {selectedCategory 
+              {selectedCategory
                 ? `${categoryOptions[selectedTransactionType as keyof typeof categoryOptions]
-                    .find(cat => cat.id === selectedCategory)?.name || selectedCategory} Items`
-                : selectedTransactionType === 'swap' 
+                  .find(cat => cat.id === selectedCategory)?.name || selectedCategory} Items`
+                : selectedTransactionType === 'swap'
                   ? 'Swap Items'
                   : 'All Items'}
             </h2>
@@ -2617,7 +2613,7 @@ const BarterPage = () => {
                 offers.map((offer, index) => {
                   const discountedPrice = offer.discount ? offer.price - (offer.price * offer.discount / 100) : offer.price;
                   const itemInCart = isInCart(offer.id);
-                  
+
                   return (
                     <motion.div
                       key={offer.id}
@@ -2646,7 +2642,7 @@ const BarterPage = () => {
                         <h3 className="text-lg font-semibold text-card-foreground mb-2 line-clamp-1">
                           {offer.product_name}
                         </h3>
-                        
+
                         <div className="flex items-center text-sm text-muted-foreground mb-3">
                           <span className="mr-2">Location: {offer.location || 'Not specified'}</span>
                         </div>
@@ -2688,11 +2684,10 @@ const BarterPage = () => {
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`flex-1 px-4 py-2 text-primary-foreground text-sm rounded-md transition-colors ${
-                              itemInCart
+                            className={`flex-1 px-4 py-2 text-primary-foreground text-sm rounded-md transition-colors ${itemInCart
                                 ? 'bg-green-600 hover:bg-green-700'
                                 : 'bg-blue-600 hover:bg-blue-700'
-                            }`}
+                              }`}
                             onClick={() => {
                               if (!user) {
                                 localStorage.setItem('intendedDestination', '/barter');
@@ -2744,11 +2739,11 @@ const BarterPage = () => {
                     >
                       <div className="h-48 relative">
                         <Image
-                          src={selectedTransactionType === 'sell' 
-                            ? (item.images || '/placeholder.jpg') 
+                          src={selectedTransactionType === 'sell'
+                            ? (item.images || '/placeholder.jpg')
                             : (item.imageUrl || '/placeholder.jpg')}
-                          alt={selectedTransactionType === 'sell' 
-                            ? (item.product_name || 'Product Image') 
+                          alt={selectedTransactionType === 'sell'
+                            ? (item.product_name || 'Product Image')
                             : (item.title || 'Item Image')}
                           fill
                           className="object-cover"
@@ -2766,7 +2761,7 @@ const BarterPage = () => {
                             <span className="text-lg font-semibold text-green-600 dark:text-green-400">৳{item.price}</span>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center text-sm text-muted-foreground mb-2">
                           <span className="mr-2">Condition: {item.product_condition || item.condition}</span>
                           <span>Location: {item.location}</span>
@@ -2775,7 +2770,7 @@ const BarterPage = () => {
                         <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                           {item.description}
                         </p>
-                      
+
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                             <div className="bg-accent h-8 w-8 rounded-full flex items-center justify-center mr-2">
@@ -2791,7 +2786,7 @@ const BarterPage = () => {
                             </div>
                           </div>
                           <div className="flex space-x-2">
-                            <motion.button 
+                            <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               className="px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-md hover:bg-primary/90"
@@ -2803,11 +2798,10 @@ const BarterPage = () => {
                               <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${
-                                  itemInCart
-                                    ? 'bg-green-600 hover:bg-green-700' 
+                                className={`px-3 py-1.5 text-primary-foreground text-sm rounded-md ${itemInCart
+                                    ? 'bg-green-600 hover:bg-green-700'
                                     : 'bg-primary hover:bg-primary/90'
-                                }`}
+                                  }`}
                                 onClick={() => {
                                   if (!user) {
                                     // Store the current path as the intended destination

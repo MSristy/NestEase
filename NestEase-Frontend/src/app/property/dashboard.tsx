@@ -48,7 +48,7 @@ export default function PropertyDashboard() {
   const [pendingPurchases, setPendingPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
   const [propertyCategoryFilter, setPropertyCategoryFilter] = useState<string | null>(null);
-  
+
   // Modal state for rejection reason
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
@@ -79,7 +79,7 @@ export default function PropertyDashboard() {
   const fetchMyProperties = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch properties');
@@ -93,7 +93,7 @@ export default function PropertyDashboard() {
   const fetchMyBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch bookings');
@@ -107,7 +107,7 @@ export default function PropertyDashboard() {
   const fetchPendingRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/pending-requests`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch pending requests');
@@ -121,7 +121,7 @@ export default function PropertyDashboard() {
   const fetchPendingPurchases = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/pending-purchases`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch pending purchases');
@@ -139,9 +139,9 @@ export default function PropertyDashboard() {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       if (!response.ok) throw new Error('Failed to approve booking');
-      
+
       toast.success('Booking approved successfully!');
       fetchPendingRequests();
       fetchMyProperties();
@@ -156,15 +156,15 @@ export default function PropertyDashboard() {
       const token = localStorage.getItem('token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/bookings/${bookingId}/reject`, {
         method: 'POST',
-        headers: { 
+        headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ reason }),
       });
-      
+
       if (!response.ok) throw new Error('Failed to reject booking');
-      
+
       toast.success('Booking rejected successfully!');
       fetchPendingRequests();
     } catch (error) {
@@ -180,9 +180,9 @@ export default function PropertyDashboard() {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       if (!response.ok) throw new Error('Failed to approve purchase');
-      
+
       toast.success('Purchase approved successfully!');
       fetchPendingPurchases();
       fetchMyProperties();
@@ -197,15 +197,15 @@ export default function PropertyDashboard() {
       const token = localStorage.getItem('token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/purchases/${purchaseId}/reject`, {
         method: 'POST',
-        headers: { 
+        headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ reason }),
       });
-      
+
       if (!response.ok) throw new Error('Failed to reject purchase');
-      
+
       toast.success('Purchase rejected successfully!');
       fetchPendingPurchases();
     } catch (error) {
@@ -227,7 +227,7 @@ export default function PropertyDashboard() {
       } else if (rejectType === 'purchase' && rejectId) {
         await handleRejectPurchase(rejectId, rejectReason);
       }
-      
+
       setShowRejectModal(false);
       setRejectReason('');
       setRejectId(null);
@@ -289,7 +289,7 @@ export default function PropertyDashboard() {
           </button>
         )}
       </div>
-      
+
       {activeTab === 'properties' && showPropertiesTab && (
         <>
           <div className="flex gap-2 mb-6">
@@ -311,7 +311,7 @@ export default function PropertyDashboard() {
               </button>
             )}
           </div>
-          
+
           <div>
             <h2 className="text-2xl font-semibold mb-4">My Properties</h2>
             {myProperties.length === 0 ? (
@@ -370,13 +370,12 @@ export default function PropertyDashboard() {
                       <strong>Check-out:</strong> {new Date(request.checkOutDate).toLocaleDateString()}
                     </div>
                     <div className="mb-2">
-                      <strong>Status:</strong> 
-                      <span className={`ml-1 px-2 py-1 rounded text-sm ${
-                        request.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
-                        request.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                        request.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <strong>Status:</strong>
+                      <span className={`ml-1 px-2 py-1 rounded text-sm ${request.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
+                          request.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                            request.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                        }`}>
                         {request.status}
                       </span>
                     </div>
@@ -387,13 +386,13 @@ export default function PropertyDashboard() {
                     )}
                     {request.status === 'PENDING' && (
                       <div className="flex gap-2 mt-4">
-                        <Button 
+                        <Button
                           onClick={() => handleApproveBooking(request.id)}
                           className="flex-1 bg-green-600 hover:bg-green-700"
                         >
                           Approve
                         </Button>
-                        <Button 
+                        <Button
                           onClick={() => {
                             setRejectId(request.id);
                             setRejectType('booking');
@@ -432,13 +431,12 @@ export default function PropertyDashboard() {
                     <div className="mb-2">{booking.property?.city}, {booking.property?.state}</div>
                     <div className="mb-2">Type: {booking.property?.type}</div>
                     <div className="mb-2">
-                      Status: 
-                      <span className={`ml-1 px-2 py-1 rounded text-sm ${
-                        booking.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
-                        booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                        booking.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      Status:
+                      <span className={`ml-1 px-2 py-1 rounded text-sm ${booking.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
+                          booking.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                            booking.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                        }`}>
                         {booking.status}
                       </span>
                     </div>
@@ -481,12 +479,11 @@ export default function PropertyDashboard() {
                     </div>
                     <div className="mb-2">
                       <strong>Status:</strong>
-                      <span className={`ml-1 px-2 py-1 rounded text-sm ${
-                        purchase.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
-                        purchase.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                        purchase.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className={`ml-1 px-2 py-1 rounded text-sm ${purchase.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
+                          purchase.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                            purchase.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                        }`}>
                         {purchase.status}
                       </span>
                     </div>
@@ -500,13 +497,13 @@ export default function PropertyDashboard() {
                     )}
                     {purchase.status === 'PENDING' && (
                       <div className="flex gap-2 mt-4">
-                        <Button 
+                        <Button
                           onClick={() => handleApprovePurchase(purchase.id)}
                           className="flex-1 bg-green-600 hover:bg-green-700"
                         >
                           Approve
                         </Button>
-                        <Button 
+                        <Button
                           onClick={() => {
                             setRejectId(purchase.id);
                             setRejectType('purchase');
@@ -576,7 +573,7 @@ function MyRequestsSection({ user }: { user: any }) {
     if (!user) return;
     setLoading(true);
     const token = localStorage.getItem('token');
-    fetch('${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/properties/my-bookings`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -610,13 +607,12 @@ function MyRequestsSection({ user }: { user: any }) {
                 </CardHeader>
                 <CardContent>
                   <div className="text-gray-700 text-sm mb-1">
-                    Status: 
-                    <span className={`ml-1 px-2 py-1 rounded text-sm ${
-                      req.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
-                      req.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                      req.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    Status:
+                    <span className={`ml-1 px-2 py-1 rounded text-sm ${req.status === 'PENDING' ? 'bg-orange-100 text-orange-800' :
+                        req.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                          req.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                      }`}>
                       {req.status}
                     </span>
                   </div>

@@ -50,9 +50,9 @@ export default function AdminSaveAndSwapPage() {
   });
 
   const categories = [
-    'electronics', 'furniture', 'vehicles', 'clothing', 'books', 'sports', 
-    'music', 'tools', 'services', 'rentals', 'repairs', 'cleaning', 
-    'gardening', 'cooking', 'transport', 'smartphone', 'car', 'dress', 
+    'electronics', 'furniture', 'vehicles', 'clothing', 'books', 'sports',
+    'music', 'tools', 'services', 'rentals', 'repairs', 'cleaning',
+    'gardening', 'cooking', 'transport', 'smartphone', 'car', 'dress',
     'bike', 'laptop', 'tablet', 'motorcycle', 'house', 'kitchen'
   ];
 
@@ -74,14 +74,14 @@ export default function AdminSaveAndSwapPage() {
       }
 
       const headers = {
-          Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       };
 
       // Fetch all three types of items
       const [swapResponse, sellResponse, offerResponse] = await Promise.all([
-        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/add-swap-items', { headers }),
-        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/sell-products', { headers }),
-        fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/item-offers', { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/add-swap-items`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/sell-products`, { headers }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/item-offers`, { headers }),
       ]);
 
       let swapData = [];
@@ -133,7 +133,7 @@ export default function AdminSaveAndSwapPage() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/admin/barter-stats', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/barter-stats`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -152,21 +152,21 @@ export default function AdminSaveAndSwapPage() {
 
   const handleDelete = async (id: number, type: 'swap' | 'sell' | 'offer') => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    
+
     try {
       const token = localStorage.getItem('token');
-      const endpoint = type === 'swap' ? 'add-swap-items' : 
-                      type === 'sell' ? 'sell-products' : 'item-offers';
-      
+      const endpoint = type === 'swap' ? 'add-swap-items' :
+        type === 'sell' ? 'sell-products' : 'item-offers';
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/${endpoint}/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (!response.ok) throw new Error('Failed to delete item');
-      
+
       toast.success('Item deleted successfully');
       fetchAllData(); // Refresh all data
     } catch (error) {
@@ -187,27 +187,27 @@ export default function AdminSaveAndSwapPage() {
   const filteredItems = getCurrentItems()
     .filter((item) => {
       const title = item.title || item.product_name || '';
-      const matchesSearch = 
+      const matchesSearch =
         title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (item.owner_name && item.owner_name.toLowerCase().includes(searchQuery.toLowerCase()));
-      
+
       const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
       const condition = item.item_condition || item.product_condition || '';
       const matchesCondition = selectedCondition ? condition === selectedCondition : true;
-      
+
       return matchesSearch && matchesCategory && matchesCondition;
     })
     .sort((a, b) => {
       const aValue = a[sortBy as keyof SwapItem];
       const bValue = b[sortBy as keyof SwapItem];
-      
+
       if (aValue === undefined || bValue === undefined) {
         return 0;
       }
-      
+
       if (sortOrder === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -235,17 +235,17 @@ export default function AdminSaveAndSwapPage() {
     if (!imagePath) {
       return '/images/placeholder.jpg';
     }
-    
+
     // If it's already a full URL, return as is
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    
+
     // If it's a relative path, make it absolute
     if (imagePath.startsWith('/')) {
       return `${process.env.NEXT_PUBLIC_API_URL}${imagePath}`;
     }
-    
+
     // If it's just a filename, construct the full path
     const uploadPath = activeTab === 'swap' ? 'swaps' : activeTab === 'sell' ? 'products' : 'products';
     return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${uploadPath}/${imagePath}`;
@@ -291,7 +291,7 @@ export default function AdminSaveAndSwapPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card rounded-lg shadow p-6 border">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
@@ -303,7 +303,7 @@ export default function AdminSaveAndSwapPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card rounded-lg shadow p-6 border">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
@@ -315,7 +315,7 @@ export default function AdminSaveAndSwapPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card rounded-lg shadow p-6 border">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
@@ -341,11 +341,10 @@ export default function AdminSaveAndSwapPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as 'swap' | 'sell' | 'offer')}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab.id
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                       ? 'border-primary text-primary'
                       : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                   <span className="ml-2 bg-secondary text-secondary-foreground py-0.5 px-2.5 rounded-full text-xs">
@@ -372,7 +371,7 @@ export default function AdminSaveAndSwapPage() {
                 />
               </div>
             </div>
-            
+
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -385,7 +384,7 @@ export default function AdminSaveAndSwapPage() {
                 </option>
               ))}
             </select>
-            
+
             <select
               value={selectedCondition}
               onChange={(e) => setSelectedCondition(e.target.value)}
@@ -398,7 +397,7 @@ export default function AdminSaveAndSwapPage() {
                 </option>
               ))}
             </select>
-            
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -409,7 +408,7 @@ export default function AdminSaveAndSwapPage() {
               <option value="category">Sort by Category</option>
               <option value="location">Sort by Location</option>
             </select>
-            
+
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
               className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
