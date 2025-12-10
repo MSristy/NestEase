@@ -15,16 +15,16 @@ type LoginFormValues = {
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
     defaultValues: {
       rememberMe: false
     }
   });
-  
+
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,16 +83,16 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Right Side - Form */}
       <div className="lg:w-1/2 p-8 flex items-center justify-center">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center mb-6">
               <div className="relative h-10 w-10 mr-2">
-                <Image 
-                  src="/logo.svg" 
-                  alt="NestEase Logo" 
+                <Image
+                  src="/logo.svg"
+                  alt="NestEase Logo"
                   fill
                   className="object-contain"
                 />
@@ -106,7 +106,7 @@ const LoginPage = () => {
               Welcome back! Please enter your credentials.
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <div>
@@ -117,7 +117,7 @@ const LoginPage = () => {
                 type="email"
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="your@email.com"
-                {...register('email', { 
+                {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -129,7 +129,7 @@ const LoginPage = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
               )}
             </div>
-            
+
             {/* Password */}
             <div>
               <div className="flex justify-between mb-1">
@@ -145,7 +145,7 @@ const LoginPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="********"
-                  {...register('password', { 
+                  {...register('password', {
                     required: 'Password is required',
                   })}
                 />
@@ -161,7 +161,7 @@ const LoginPage = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
               )}
             </div>
-            
+
             {/* Remember Me */}
             <div className="flex items-center">
               <input
@@ -174,7 +174,7 @@ const LoginPage = () => {
                 Remember me for 30 days
               </label>
             </div>
-            
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -183,7 +183,7 @@ const LoginPage = () => {
               Sign In
             </button>
           </form>
-          
+
           {/* Social Login Options */}
           <div className="mt-6">
             <div className="relative">
@@ -196,7 +196,7 @@ const LoginPage = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -214,7 +214,7 @@ const LoginPage = () => {
               </button>
             </div>
           </div>
-          
+
           {/* Signup Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-600 dark:text-gray-400">
