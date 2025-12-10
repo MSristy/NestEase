@@ -5,15 +5,16 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  
+
   // Enable CORS with specific configuration
+ 
   app.enableCors({
-    origin: 'http://localhost:3000', // Your frontend URL
+    origin: process.env.CORS_ORIGIN || '*', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: 'Content-Type, Accept, Authorization',
   });
-  
+
   // Serve static files from the uploads directory
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
@@ -24,7 +25,10 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  await app.listen(3001);
+  
+  const port = process.env.PORT || 3001;
+  await app.listen(port);
+  
   console.log(`Application is running on: ${await app.getUrl()}`);
   console.log(`Static files served from: ${join(process.cwd(), 'uploads')}`);
 }

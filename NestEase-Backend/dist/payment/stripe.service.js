@@ -23,7 +23,7 @@ let StripeService = class StripeService {
         // This is a temporary fix to allow the application to start.
         const secretKey = this.configService.get('STRIPE_SECRET_KEY') || 'sk_test_4eC39HqLyjWDarjtT1zdp7dc';
         this.stripe = new stripe_1.default(secretKey, {
-            apiVersion: '2025-04-30.basil',
+            apiVersion: '2025-08-27.basil',
         });
     }
     async createPaymentIntent(params) {
