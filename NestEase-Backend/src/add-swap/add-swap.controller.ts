@@ -55,8 +55,8 @@ export class AddSwapController {
       throw new BadRequestException('Image is required');
     }
 
-    // Create the full image URL
-    const imageUrl = `/uploads/swaps/${file.filename}`;
+    // FIXED: Using absolute URL for Render
+    const imageUrl = `https://nestease-backend.onrender.com/uploads/swaps/${file.filename}`;
 
     // Add the image URL to the form data
     const swapData = {
@@ -66,32 +66,4 @@ export class AddSwapController {
 
     return this.addSwapService.createSwapItem(swapData);
   }
-
-  @Post()
-  async create(@Body() formData: any): Promise<CreateSwapResponse> {
-    try {
-      // Validate required fields
-      const requiredFields = [
-        'owner_name',
-        'owner_phone',
-        'owner_email',
-        'product_name',
-        'category',
-        'item_condition',
-        'location',
-        'description',
-        'images'
-      ];
-      
-      for (const field of requiredFields) {
-        if (!formData[field]) {
-          throw new BadRequestException(`Missing required field: ${field}`);
-        }
-      }
-
-      return await this.addSwapService.createSwapItem(formData);
-    } catch (error: any) {
-      throw new BadRequestException(error.message || 'Failed to create swap item');
-    }
-  }
-} 
+}
