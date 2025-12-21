@@ -295,7 +295,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-items', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -329,7 +329,7 @@ export default function SaveSwapPage() {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/swap-requests', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/swap-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
