@@ -16,8 +16,12 @@ async function bootstrap() {
   });
   */
 
-   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'https://nest-ease-gamma.vercel.app',
+ // Enable CORS with specific configuration
+  app.enableCors({
+    origin: [
+      'https://nest-ease-gamma.vercel.app', // 
+      'http://localhost:3000',              // 
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
