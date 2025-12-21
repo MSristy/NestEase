@@ -1695,7 +1695,7 @@ const BarterPage = () => {
           product_condition: localFormData.condition.trim(),
           location: localFormData.location.trim(),
           description: localFormData.description.trim(),
-          images: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
+          images: imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
         };
 
         // Submit to the sell_product table
@@ -2014,7 +2014,7 @@ const BarterPage = () => {
           product_condition: localFormData.condition.trim(),
           location: localFormData.location.trim(),
           description: localFormData.description.trim(),
-          images: `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
+          images: imageUrl.startsWith('http') ? imageUrl : `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`
         };
 
         // Submit to the item_offer table
