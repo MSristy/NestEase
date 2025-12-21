@@ -39,7 +39,7 @@ export class AddSwapService {
           condition: item.item_condition,
           description: item.description,
           location: item.location,
-          imageUrl: `http://localhost:3001${item.images}`,
+          imageUrl: item.images,
           owner: {
             name: item.owner_name,
             phone: item.owner_phone,
@@ -77,7 +77,7 @@ export class AddSwapService {
           condition: item.item_condition,
           description: item.description,
           location: item.location,
-          imageUrl: `http://localhost:3001${item.images}`,
+          imageUrl: item.images,
           owner: {
             name: item.owner_name,
             swaps: 0,
