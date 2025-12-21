@@ -7,9 +7,17 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Enable CORS with specific configuration
-
+/*
   app.enableCors({
     origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+  });
+  */
+
+   app.enableCors({
+    origin: process.env.CORS_ORIGIN || 'https://nest-ease-gamma.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
